@@ -1,0 +1,139 @@
+@mixin container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 30px;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.wrapper {
+  width: 1920px;
+  min-height: 100%;
+  margin: 0 auto;
+  padding: 0 50px;
+}
+
+.header {
+  background-color: $header-bg;
+
+  &__container {
+    @include container;
+    min-height: 90px;
+  }
+
+  &__logo {
+    color: $logo-color;
+    font-size: 32px;
+    line-height: 64px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    position: relative;
+    padding-left: 75px;
+
+    &::before {
+      content: '';
+      position: absolute;
+      width: 64px;
+      height: 64px;
+      left: 0;
+      top: 0;
+      background: url('./img/logo.png');
+    }
+  }
+
+  &__price {
+    font-size: 24px;
+    font-weight: 600;
+    color: $header-color;
+
+    &-amount {
+      font-weight: 500;
+      color: $grey-color;
+      padding-left: 30px;
+      position: relative;
+
+      &::before {
+        content: '';
+        position: absolute;
+        width: 24px;
+        height: 24px;
+        top: 0;
+        left: 0;
+        background: url('./img/euro.png');
+      }
+    }
+  }
+
+  &__cart {
+    margin-left: 230px;
+    width: 35px;
+    height: 29px;
+    background: url('./img/cart.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    cursor: pointer;
+  }
+}
+
+.main {
+  background-color: $main-bg;
+  flex: 1 0 auto;
+
+  &__container {
+    @include container;
+  }
+
+  .aside {
+    width: 25%;
+  }
+
+  &__block {
+    width: 75%;
+  }
+}
+
+.footer{
+  background-color: $footer-bg;
+  font-size: 14px;
+
+  &__container {
+    @include container;
+    min-height: 70px;
+  }
+
+  &__link {
+    color: $link-color;
+    line-height: 24px;
+    transition:  all 0.3s ease-in-out;
+
+    &:hover {
+      font-size: 16px;
+      text-decoration: underline;
+    }
+  }
+
+  .github-link {
+    width: 100px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .school-logo {
+    width: 100px;
+    height: 40px;
+    background: url('./img/rsschool.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+
+  &__year {
+    font-size: 20px;
+    font-weight: 600;
+  }
+}
+
