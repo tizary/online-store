@@ -12,13 +12,14 @@
 }
 
 .wrapper {
-  width: 1920px;
+  max-width: 1920px;
   min-height: 100%;
   margin: 0 auto;
   padding: 0 50px;
 }
 
 .header {
+  width: 100%;
   background-color: $header-bg;
 
   &__container {
@@ -81,6 +82,7 @@
 }
 
 .main {
+  width: 100%;
   background-color: $main-bg;
   flex: 1 0 auto;
 
@@ -98,6 +100,7 @@
 }
 
 .footer{
+  width: 100%;
   background-color: $footer-bg;
   font-size: 14px;
 
