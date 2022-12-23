@@ -20,7 +20,7 @@ module.exports = {
         path: path.resolve(__dirname, 'dist'),
         clean: true,
         filename: 'index.js',
-        assetModuleFilename: 'assets/[name][ext]',
+        assetModuleFilename: 'img/[name][ext]',
     },
     plugins: [
         new HtmlWebpackPlugin({
@@ -46,8 +46,13 @@ module.exports = {
                 use: [devMode ? 'style-loader' : MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
             },
             {
-                test: /\.(?:ico|png|jpg|jpeg|svg)$/i,
-                type: 'asset/inline',
+                test: /\.(png|jpe?g|gif)$/i,
+                // use: [
+                //     {
+                //         loader: 'file-loader',
+                //     },
+                // ],
+                type: 'asset/resource',
             },
         ],
     },
