@@ -29,6 +29,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  font-family: $font;
 }
 
 .wrapper {
@@ -178,6 +179,151 @@
         color: $light-grey-color;
       }
     }
+
+    .field {
+      width: 100%;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      font-weight: 400;
+      font-size: 20px;
+      line-height: 26px;
+    }
+
+    .min-price,
+    .max-price,
+    .min-amount,
+    .max-amount {
+      display: inline-block;
+      width: 60px;
+      color: $main-color;
+    }
+
+    .slider {
+      height: 8px;
+      border-radius: 5px;
+      background: $light-grey-color;
+      position: relative;
+    }
+
+    .progress {
+      height: 8px;
+      left: 0;
+      right: 0;
+      position: absolute;
+      border-radius: 5px;
+      background: $main-color;
+    }
+
+    &__price {
+      border: 1px solid $light-grey-color;
+      border-radius: 5px;
+      padding: 10px;
+
+      .aside__title {
+        position: relative;
+
+        &::after {
+          content: '';
+          position: absolute;
+          width: 18px;
+          height: 18px;
+          top: 3px;
+          left: 67px;
+          background: url('./img/euro.png');
+          background-size: contain;
+          background-repeat: no-repeat;
+        }
+      }
+
+      &-block {
+        padding: 10px;
+
+        .range-input {
+          position: relative;
+        }
+
+        .price-track {
+          position: absolute;
+          top: -14px;
+          width: 100%;
+          background: none;
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          appearance: none;
+          pointer-events: none;
+
+          &::-webkit-slider-thumb {
+            width: 20px;
+            height: 20px;
+            background: $main-color;
+            border-radius: 50%;
+            border: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+            pointer-events: auto;
+          }
+          &::-moz-range-thumb {
+            width: 15px;
+            height: 15px;
+            background: $main-color;
+            border-radius: 5px;
+            border: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+            pointer-events: auto;
+          }
+        }
+      }
+    }
+
+    &__stock {
+      border: 1px solid $light-grey-color;
+      border-radius: 5px;
+      padding: 10px;
+      margin-top: 10px;
+
+      &-block {
+        padding: 10px;
+
+        .range-input {
+          position: relative;
+        }
+
+        .stock-track {
+          position: absolute;
+          top: -14px;
+          width: 100%;
+          background: none;
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          appearance: none;
+          pointer-events: none;
+
+          &::-webkit-slider-thumb {
+            width: 20px;
+            height: 20px;
+            background: $main-color;
+            border-radius: 50%;
+            border: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+            pointer-events: auto;
+          }
+          &::-moz-range-thumb {
+            width: 15px;
+            height: 15px;
+            background: $main-color;
+            border-radius: 5px;
+            border: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+            pointer-events: auto;
+          }
+        }
+      }
+    }
+
   }
 
   &__block {
@@ -207,13 +353,13 @@
   }
 
   .github-link {
-    width: 100px;
+    width: 120px;
     display: flex;
     flex-direction: column;
   }
 
   .school-logo {
-    width: 100px;
+    width: 120px;
     height: 40px;
     background: url('./img/rsschool.svg');
     background-size: contain;
