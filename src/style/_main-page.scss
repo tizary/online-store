@@ -5,6 +5,26 @@
   padding: 0 30px;
 }
 
+@mixin btn {
+  border: 1px solid $main-color;
+  border-radius: 4px;
+  width: 200px;
+  height: 54px;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 20px;
+  letter-spacing: 0.1em;
+  color: $main-color;
+  transition: .5s;
+
+  &:hover {
+    cursor: pointer;
+    border: none;
+    background-color: $main-color;
+    color: $footer-bg;
+  }
+}
+
 .body {
   display: flex;
   flex-direction: column;
@@ -50,7 +70,7 @@
   &__price {
     font-size: 24px;
     font-weight: 600;
-    color: $header-color;
+    color: $main-color;
 
     &-amount {
       font-weight: 500;
@@ -88,10 +108,76 @@
 
   &__container {
     @include container;
+    align-items: start;
+    padding: 40px 0;
   }
 
   .aside {
     width: 25%;
+
+    &__options {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+    }
+
+    .btn {
+      @include btn;
+    }
+
+    &__title {
+      font-weight: 600;
+      font-size: 21px;
+      line-height: 28px;
+      padding-bottom: 10px;
+    }
+
+    &__category,
+    &__brand {
+      padding: 10px 0;
+
+      &-list {
+        height: 195px;
+        overflow-y: auto;
+        border: 1px solid $light-grey-color;
+        border-radius: 5px;
+        padding: 10px;
+
+        &::-webkit-scrollbar {
+          width: 0;
+        }
+
+        &::-webkit-scrollbar {
+          width: 7px;
+          background-color: $light-grey-color;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background-color: $main-color;
+          border-radius: 5px;
+        }
+      }
+
+      .list-item {
+        padding-bottom: 5px;
+        display: flex;
+        font-weight: 400;
+        font-size: 20px;
+        line-height: 26px;
+      }
+
+      .item-label {
+        padding-left: 10px;
+      }
+
+      .item-count {
+        display: block;
+        margin-left: auto;
+        width: 55px;
+        color: $light-grey-color;
+      }
+    }
   }
 
   &__block {
@@ -223,7 +309,7 @@
   }
 
   &__link {
-    color: $link-color;
+    color: $main-color;
     line-height: 24px;
     transition:  all 0.3s ease-in-out;
 
