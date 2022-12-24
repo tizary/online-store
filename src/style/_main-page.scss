@@ -96,6 +96,119 @@
 
   &__block {
     width: 75%;
+    background: $footer-bg;
+    margin-top: 20px;
+    &__header {
+      min-height: 60px;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #878C8F;
+      padding: 0 10px;
+      &-select {
+        min-height: 30px;
+        border-radius: 20px;
+      }
+      &-found {
+
+      }
+      &-search {
+        min-height: 30px;
+        border-radius: 20px;
+        text-align: center;
+      }
+      &__view-mode {
+        display: flex;
+        justify-content: space-between;
+        width: 100px;
+        &__small {
+          width: 40px;
+          height: 40px;
+          background: url('./img/four_squares.png');
+          background-size: contain;
+          background-repeat: no-repeat;
+          transition: all 0.8s ease;
+          &:hover {
+            cursor: pointer;
+            transform: scale(1.1);
+          }
+        }
+        &__big {
+          width: 40px;
+          height: 40px;
+          background: url('./img/six_squares.png');
+          background-size: contain;
+          background-repeat: no-repeat;
+          transition: all 0.8s ease;
+          &:hover {
+            cursor: pointer;
+            transform: scale(1.1);
+          }
+        }
+      }
+    }
+    &__card-field {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      &__card {
+        position: relative;
+        width: 300px;
+        height: 300px;
+        margin: 10px;
+        border: 1px solid #878C8F;
+        &__header {
+          height: 70%;
+          padding: 5px;
+          &__info {
+            position: absolute;
+            top: 25px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            background: $footer-bg;
+            border-radius: 10px;
+            margin: 10px;
+          }
+          &__arrow {
+            margin: 0 auto;
+            margin-top: 5px;
+            width: 80px;
+            text-align: center;
+            background: $footer-bg;
+            border-radius: 5px;
+            &:hover {
+              cursor: pointer;
+            }
+          }
+        }
+        &__footer {
+          display: flex;
+          flex-direction: column;
+          &__name {
+            text-align: center;
+            padding: 5px;
+          }
+          &__button-container {
+            display: flex;
+            justify-content: space-around;
+            &__button {
+              width: 120px;
+              height: 35px;
+              border: 1px solid #2b7bc6;
+              border-radius: 5px;
+              background: $footer-bg;
+              transition: all 0.8s ease;
+              &:hover {
+                cursor: pointer;
+                transform: scale(1.1);
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
 
@@ -140,3 +253,6 @@
   }
 }
 
+.hide {
+  display: none;
+}
