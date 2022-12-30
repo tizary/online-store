@@ -20,11 +20,16 @@ export interface ImagesArray {
 }
 
 export class Products {
-    async render() {
-        const url = 'https://dummyjson.com/products?limit=100';
+    url = 'https://dummyjson.com/products?limit=100';
+    async render(url: string) {
+        // const url = 'https://dummyjson.com/products?limit=100';
         const response = await fetch(url);
-        const data = await response.json();
-        const productsArr = data.products;
-        return productsArr;
+        if (response.status === 200) {
+            const data = await response.json();
+            const productsArr = data.products;
+            return productsArr;
+        } else {
+            console.log('errrrr');
+        }
     }
 }
