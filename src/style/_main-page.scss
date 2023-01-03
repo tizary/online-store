@@ -182,7 +182,7 @@
 
   &__block {
     width: 75%;
-    background: $footer-bg;
+    padding: 10px;
     margin-top: 20px;
     &__header {
       min-height: 60px;
@@ -190,8 +190,9 @@
       flex-direction: row;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid #878C8F;
       padding: 0 10px;
+      border: 1px solid $light-grey-color;
+      border-radius: 5px;
       &-select {
         min-height: 30px;
         border-radius: 20px;
@@ -208,7 +209,7 @@
         display: flex;
         justify-content: space-between;
         width: 100px;
-        &__small {
+        &__big {
           width: 40px;
           height: 40px;
           background: url('./img/four_squares.png');
@@ -220,7 +221,7 @@
             transform: scale(1.1);
           }
         }
-        &__big {
+        &__small {
           width: 40px;
           height: 40px;
           background: url('./img/six_squares.png');
@@ -238,58 +239,47 @@
       display: flex;
       justify-content: space-between;
       flex-wrap: wrap;
+      border: 1px solid $light-grey-color;
+      border-radius: 5px;
+      margin-top: 10px;
       &__card {
         position: relative;
         width: 300px;
-        height: 300px;
         margin: 10px;
-        border: 1px solid #878C8F;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 16px 32px rgb(0 0 0 / 30%);
         &__header {
-          height: 70%;
+          height: 200px;
           padding: 5px;
-          &__info {
-            position: absolute;
-            top: 25px;
-            left: 0;
-            right: 0;
-            text-align: center;
-            background: $footer-bg;
-            border-radius: 10px;
-            margin: 10px;
-          }
-          &__arrow {
-            margin: 0 auto;
-            margin-top: 5px;
-            width: 80px;
-            text-align: center;
-            background: $footer-bg;
-            border-radius: 5px;
-            &:hover {
-              cursor: pointer;
-            }
-          }
         }
         &__footer {
           display: flex;
           flex-direction: column;
+          align-items: center;
+          padding: 8px;
+          background: $footer-bg;
           &__name {
             text-align: center;
             padding: 5px;
           }
-          &__button-container {
-            display: flex;
-            justify-content: space-around;
-            &__button {
-              width: 120px;
-              height: 35px;
-              border: 1px solid #2b7bc6;
-              border-radius: 5px;
-              background: $footer-bg;
-              transition: all 0.8s ease;
-              &:hover {
-                cursor: pointer;
-                transform: scale(1.1);
-              }
+          &__info {
+            text-align: center;
+          }
+          &__button {
+            border: 1px solid #2B7BC6;
+            border-radius: 4px;
+            width: 120px;
+            height: 35px;
+            font-weight: 600;
+            font-size: 14px;
+            color: #2B7BC6;
+            transition: 0.5s;
+            &:hover {
+              cursor: pointer;
+              border: none;
+              background-color: $main-color;
+              color: $footer-bg;
             }
           }
         }
