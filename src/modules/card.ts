@@ -1,13 +1,15 @@
 import { Products, productObject } from './rednerProducts';
-
 export class ProductsCard extends Products {
     productsArr!: productObject[];
     async createCardList() {
         const hash: string = window.location.hash;
-        console.log(hash);
-
         let productsArr: productObject[] = [];
-        if (!hash) {
+        if (
+            hash.indexOf('brand') === -1 &&
+            hash.indexOf('category') === -1 &&
+            hash.indexOf('price') === -1 &&
+            hash.indexOf('stock') === -1
+        ) {
             productsArr = await this.render(this.url);
         } else {
             if (hash.indexOf('category') !== 0) {
@@ -18,14 +20,11 @@ export class ProductsCard extends Products {
                 } else {
                     allArr = await this.render(this.url);
                 }
-                const arr: string[] = JSON.parse(localStorage.getItem('filteringHashObj') || '').category || [];
-
+                const arr: string[] = this.findParametrs('category');
                 allArr.forEach((item: productObject) => {
-                    arr.forEach((categoryFilter) => {
-                        if (item.category === categoryFilter) {
-                            categoryArr.push(item);
-                        }
-                    });
+                    if (arr.includes(item.category)) {
+                        categoryArr.push(item);
+                    }
                 });
                 productsArr = categoryArr;
             }
@@ -37,13 +36,11 @@ export class ProductsCard extends Products {
                 } else {
                     allArr = await this.render(this.url);
                 }
-                const arr: string[] = JSON.parse(localStorage.getItem('filteringHashObj') || '').brand || [];
+                const arr: string[] = this.findParametrs('brand');
                 allArr.forEach((item: productObject) => {
-                    arr.forEach((brandFilter) => {
-                        if (item.brand === brandFilter) {
-                            brandArr.push(item);
-                        }
-                    });
+                    if (arr.includes(item.brand)) {
+                        brandArr.push(item);
+                    }
                 });
                 productsArr = brandArr;
             }
@@ -55,10 +52,9 @@ export class ProductsCard extends Products {
                 } else {
                     allArr = await this.render(this.url);
                 }
-                const arr: number[] = JSON.parse(localStorage.getItem('filteringHashObj') || '').price || [];
-
+                const arr: string[] = this.findParametrs('price');
                 allArr.forEach((item: productObject) => {
-                    if (item.price >= arr[0] && item.price <= arr[1]) {
+                    if (item.price >= +arr[0] && item.price <= +arr[1]) {
                         priceArr.push(item);
                     }
                 });
@@ -72,32 +68,205 @@ export class ProductsCard extends Products {
                 } else {
                     allArr = await this.render(this.url);
                 }
-                const arr: number[] = JSON.parse(localStorage.getItem('filteringHashObj') || '').stock || [];
+                const arr: string[] = this.findParametrs('stock');
                 allArr.forEach((item: productObject) => {
-                    if (item.stock >= arr[0] && item.stock <= arr[1]) {
+                    if (item.stock >= +arr[0] && item.stock <= +arr[1]) {
                         stockArr.push(item);
                     }
                 });
                 productsArr = stockArr;
             }
         }
-        console.log(productsArr);
-
+        if (hash.indexOf('sort') !== -1) {
+            if (productsArr.length === 0) {
+                productsArr = await this.render(this.url);
+            }
+            const select = document.getElementById('select') as HTMLSelectElement;
+            switch (+select.value) {
+                case 1:
+                    productsArr.sort((a, b) => a.price - b.price);
+                    window.location.hash = hash.replace(/(sort=true)\d{0,}/, `sort=true${select.value}`);
+                    break;
+                case 2:
+                    productsArr.sort((a, b) => b.price - a.price);
+                    window.location.hash = hash.replace(/(sort=true)\d{0,}/, `sort=true${select.value}`);
+                    break;
+                case 3:
+                    productsArr.sort((a, b) => a.rating - b.rating);
+                    window.location.hash = hash.replace(/(sort=true)\d{0,}/, `sort=true${select.value}`);
+                    break;
+                case 4:
+                    productsArr.sort((a, b) => b.rating - a.rating);
+                    window.location.hash = hash.replace(/(sort=true)\d{0,}/, `sort=true${select.value}`);
+                    break;
+                case 5:
+                    productsArr.sort((a, b) => a.discountPercentage - b.discountPercentage);
+                    window.location.hash = hash.replace(/(sort=true)\d{0,}/, `sort=true${select.value}`);
+                    break;
+                case 6:
+                    productsArr.sort((a, b) => b.discountPercentage - a.discountPercentage);
+                    window.location.hash = hash.replace(/(sort=true)\d{0,}/, `sort=true${select.value}`);
+                    break;
+                default:
+                    window.location.hash = hash.replace(/(&sort=true)\d{0,}/, ``);
+                    break;
+            }
+        }
+        if (this.findParametrs('search').length) {
+            let allArr;
+            const searchArr: productObject[] = [];
+            if (productsArr.length !== 0) {
+                allArr = productsArr;
+            } else {
+                allArr = await this.render(this.url);
+            }
+            const arr: string[] = this.findParametrs('search');
+            allArr.forEach((item: productObject) => {
+                if (item.title.toLocaleLowerCase().includes(arr[0].toLocaleLowerCase())) {
+                    searchArr.push(item);
+                }
+            });
+            productsArr = searchArr;
+        }
         let cardList = '';
         productsArr.forEach((item: productObject) => {
             cardList += `
-            <div class="card">
-                <p>${item.title}</p>
-            </div>
-        `;
+            <div class="main__block__card-field__card">
+                <div class="main__block__card-field__card__header" style="background: url(${item.thumbnail}) center top / 100% 100% no-repeat;"></div>
+                <div class="main__block__card-field__card__footer">
+                    <div class="main__block__card-field__card__footer__name">${item.title}</div>
+                    <div class="main__block__card-field__card__footer__info">
+                        <p>Categoty: ${item.category}</p>
+                        <p>Brand: ${item.brand}</p>
+                        <p>Price: ${item.price}</p>
+                        <p>Discount: ${item.discountPercentage}</p>
+                        <p>Rating: ${item.rating}</p>
+                        <p>Stock: ${item.stock}</p>
+                    </div>
+                    <button class="main__block__card-field__card__footer__button">ADD TO CARD</button>
+                </div>
+            </div>`;
         });
+        const foundItem = document.querySelector('.main__block__header-found') as HTMLElement;
+        foundItem.textContent = `Found: ${productsArr.length}`;
 
-        const mainBlock = document.querySelector('.main__block');
+        const mainBlock = document.querySelector('.main__block__card-field');
         if (mainBlock) {
             mainBlock.innerHTML = cardList;
         }
+        if (hash.indexOf('viewMode=small') !== -1) {
+            this.viewModeSmall();
+        } else if (hash.indexOf('viewMode=big') !== -1) {
+            this.viewModeBig();
+        }
+    }
+    mainBlockActionsInit() {
+        document.querySelector('.main__block__header__view-mode__big')?.addEventListener('click', this.viewModeBig);
+        document.querySelector('.main__block__header__view-mode__small')?.addEventListener('click', this.viewModeSmall);
+        const select = document.querySelector('.main__block__header-select') as HTMLSelectElement;
+        const search = document.getElementById('input_card') as HTMLInputElement;
+        const hash: string = window.location.hash;
+        select.addEventListener('change', () => {
+            this.sortCards();
+        });
+        search.addEventListener('input', () => {
+            this.searchCards(search.value);
+        });
+        if (this.findParametrs('sort')) {
+            select.selectedIndex = +hash[hash.search(/(sort=true)\d{0,}/) + 9];
+        }
+        if (this.findParametrs('search')[0]) {
+            search.value = this.findParametrs('search')[0];
+        }
+        const cardField = document.querySelector('.main__block__card-field') as HTMLElement;
+        cardField.addEventListener('click', (event: MouseEvent) => {
+            this.cardEvents(event);
+        });
+        this.createCardList();
+    }
+    viewModeBig() {
+        const cards = document.querySelectorAll<HTMLElement>('.main__block__card-field__card');
+        const cardsInfo = document.querySelectorAll<HTMLElement>('.main__block__card-field__card__footer__info');
+        const cardsImg = document.querySelectorAll<HTMLElement>('.main__block__card-field__card__header');
+        const hash: string = window.location.hash;
+        if (hash.indexOf('viewMode') === -1) {
+            console.log('hi');
+            window.location.hash += `&viewMode=big`;
+        } else {
+            window.location.hash = hash.replace('small', 'big');
+        }
+        cards.forEach((item): void => {
+            item.style.width = '300px';
+        });
+        cardsImg.forEach((item): void => {
+            item.style.height = '200px';
+        });
+        cardsInfo.forEach((item): void => {
+            item.classList.remove('hide');
+        });
+    }
+    viewModeSmall() {
+        const cards = document.querySelectorAll<HTMLElement>('.main__block__card-field__card');
+        const cardsInfo = document.querySelectorAll<HTMLElement>('.main__block__card-field__card__footer__info');
+        const cardsImg = document.querySelectorAll<HTMLElement>('.main__block__card-field__card__header');
+        const hash: string = window.location.hash;
+        if (hash.indexOf('viewMode') === -1) {
+            console.log('hi');
+            window.location.hash += `&viewMode=small`;
+        } else {
+            window.location.hash = hash.replace('big', 'small');
+        }
+        cards.forEach((item): void => {
+            item.style.width = '200px';
+        });
+        cardsImg.forEach((item): void => {
+            item.style.height = '150px';
+        });
+        cardsInfo.forEach((item): void => {
+            item.classList.add('hide');
+        });
+    }
+    cardEvents(event: MouseEvent) {
+        const cardButton2 = document.querySelector('.main__block__card-field__card__footer__button') as HTMLElement;
+        const target = event.target;
+        if (target != null) {
+            console.log(target);
+        }
+        if (event.target != cardButton2) {
+            console.log('не кнопка');
+        } else {
+            console.log('кнопка');
+        }
+    }
+    searchCards(text: string): void {
+        const hash: string = window.location.hash;
+        if (window.location.hash.indexOf('search') === -1) {
+            window.location.hash += `&search=${text}`;
+        } else {
+            window.location.hash = hash.replace(`search=${this.findParametrs('search')[0]}`, `search=${text}`);
+        }
+        if (text === '') {
+            window.location.hash = hash.replace(/(&search=)./, ``);
+        }
+        this.createCardList();
+    }
+    sortCards() {
+        if (window.location.hash.indexOf('sort') === -1) {
+            window.location.hash += `&sort=true`;
+        }
+        this.createCardList();
+    }
+    findParametrs(name: string): string[] {
+        let parametr: string[] = [];
+        const hash: string = window.location.hash;
+        const parametrsArr: string[] = hash.split('&');
+        parametrsArr.forEach((item) => {
+            if (item.includes(name)) {
+                parametr = item.slice(item.lastIndexOf('=') + 1).split(',');
+            }
+        });
+        return parametr;
     }
 }
-
-const addProducts = new ProductsCard();
-addProducts.createCardList();
+const mainBlockInit = new ProductsCard();
+mainBlockInit.mainBlockActionsInit();

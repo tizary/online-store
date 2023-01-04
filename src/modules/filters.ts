@@ -404,7 +404,6 @@ export class ProductsFiltering extends Products {
 
             `;
         }
-
         let arr: number[];
         if (
             localStorage.getItem('filteringHashObj') &&
@@ -479,6 +478,7 @@ export class ProductsFiltering extends Products {
         const resetBtn = document.querySelector('.reset-btn');
         if (resetBtn) {
             resetBtn.addEventListener('click', () => {
+                window.location.hash = '';
                 localStorage.removeItem('filteringHashObj');
             });
         }
