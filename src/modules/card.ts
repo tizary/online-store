@@ -56,6 +56,7 @@ export class ProductsCard extends Products {
                     allArr = await this.render(this.url);
                 }
                 const arr: number[] = JSON.parse(localStorage.getItem('filteringHashObj') || '').price || [];
+
                 allArr.forEach((item: productObject) => {
                     if (item.price >= arr[0] && item.price <= arr[1]) {
                         priceArr.push(item);

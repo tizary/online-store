@@ -1,5 +1,6 @@
 import { Products, productObject } from './rednerProducts';
 import { ProductsCard } from './card';
+import route from './router';
 
 let filteringHashObj: Record<string, string[] | number[]>;
 
@@ -19,6 +20,7 @@ export class ProductsFiltering extends Products {
             this.filterByPrice();
             this.filterByStock();
             this.reset();
+            this.copy();
         }
     }
 
@@ -316,7 +318,7 @@ export class ProductsFiltering extends Products {
         } else {
             arr = [];
         }
-        const addProducts = new ProductsCard();
+        // const addProducts = new ProductsCard();
 
         const rangeInput: NodeListOf<HTMLInputElement> = document.querySelectorAll('.price-track');
         const progress: HTMLElement | null = document.querySelector('.aside__price-block .progress');
@@ -372,6 +374,8 @@ export class ProductsFiltering extends Products {
                 localStorage.setItem('filteringHashObj', JSON.stringify(filteringHashObj));
             });
             input.addEventListener('mouseup', () => {
+                const addProducts = new ProductsCard();
+
                 addProducts.createCardList();
             });
         });
@@ -473,14 +477,32 @@ export class ProductsFiltering extends Products {
 
     reset() {
         const resetBtn = document.querySelector('.reset-btn');
-        const addProducts = new ProductsCard();
         if (resetBtn) {
             resetBtn.addEventListener('click', () => {
-                window.localStorage.hash = '';
                 localStorage.removeItem('filteringHashObj');
+            });
+        }
+        if (resetBtn) {
+            resetBtn.addEventListener('click', () => {
+                route;
+                const filterBlock = new ProductsFiltering();
+                filterBlock.initializeFiltering();
+                const addProducts = new ProductsCard();
                 addProducts.createCardList();
             });
         }
+    }
+
+    copy() {
+        const copyBtn = document.querySelector('.copy-btn');
+        copyBtn?.addEventListener('click', () => {
+            const href = window.location.href;
+            navigator.clipboard.writeText(href);
+            setTimeout(() => {
+                copyBtn.textContent = 'Copy link';
+            }, 1000);
+            copyBtn.textContent = 'Copied!';
+        });
     }
 }
 
