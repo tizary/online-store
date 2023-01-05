@@ -483,12 +483,12 @@ export class ProductsFiltering extends Products {
             });
         }
         if (resetBtn) {
-            resetBtn.addEventListener('click', () => {
-                route;
+            resetBtn.addEventListener('click', (e) => {
+                route(e);
                 const filterBlock = new ProductsFiltering();
                 filterBlock.initializeFiltering();
-                const addProducts = new ProductsCard();
-                addProducts.createCardList();
+                const mainBlockInit = new ProductsCard();
+                mainBlockInit.mainBlockActionsInit();
             });
         }
     }

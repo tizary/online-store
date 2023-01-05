@@ -411,6 +411,9 @@
             &__header {
               height: 200px;
               padding: 5px;
+              &:hover {
+                cursor: pointer;
+              }
             }
             &__footer {
               display: flex;

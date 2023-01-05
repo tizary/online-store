@@ -131,8 +131,10 @@ export class ProductsCard extends Products {
         let cardList = '';
         productsArr.forEach((item: productObject) => {
             cardList += `
-            <div class="main__block__card-field__card">
-                <div class="main__block__card-field__card__header" style="background: url(${item.thumbnail}) center top / 100% 100% no-repeat;"></div>
+            <div class="main__block__card-field__card" data-id="${2222}">
+                <div class="main__block__card-field__card__header" style="background: url(${
+                    item.thumbnail
+                }) center top / 100% 100% no-repeat;"  data-id="${item.id}"></div>
                 <div class="main__block__card-field__card__footer">
                     <div class="main__block__card-field__card__footer__name">${item.title}</div>
                     <div class="main__block__card-field__card__footer__info">
@@ -227,15 +229,10 @@ export class ProductsCard extends Products {
         });
     }
     cardEvents(event: MouseEvent) {
-        const cardButton2 = document.querySelector('.main__block__card-field__card__footer__button') as HTMLElement;
         const target = event.target;
-        if (target != null) {
-            console.log(target);
-        }
-        if (event.target != cardButton2) {
-            console.log('не кнопка');
-        } else {
-            console.log('кнопка');
+        if (target instanceof HTMLElement && target.dataset.id !== undefined) {
+            console.log(target.dataset.id);
+            window.location.hash = `product-details/${target.dataset.id}`;
         }
     }
     searchCards(text: string): void {
