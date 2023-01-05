@@ -92,7 +92,7 @@
         }
     }
 
-    &__cart {
+    &__cart-logo {
         margin-left: 230px;
         width: 35px;
         height: 29px;
@@ -357,7 +357,7 @@
             border-radius: 5px;
           }
           &-found {
-    
+
           }
           &-search {
             min-height: 30px;
@@ -428,7 +428,7 @@
               &__button {
                 border: 1px solid #2B7BC6;
                 border-radius: 4px;
-                width: 120px;
+                width: 150px;
                 height: 35px;
                 font-weight: 600;
                 font-size: 14px;
@@ -503,4 +503,9 @@
     position: absolute;
     top: 50%;
     left: calc(50% - 150px);
+}
+
+.cart-active {
+    border: 1px solid $light-grey-color;
+    color: $light-grey-color;
 }

@@ -49,7 +49,6 @@ export class ProductsFiltering extends Products {
         if (aside) {
             aside.innerHTML = categoryList;
         }
-        console.log(this.productsArr);
 
         let arr: string[];
         if (
@@ -477,18 +476,14 @@ export class ProductsFiltering extends Products {
     reset() {
         const resetBtn = document.querySelector('.reset-btn');
         if (resetBtn) {
-            resetBtn.addEventListener('click', () => {
-                window.location.hash = '';
+            resetBtn.addEventListener('click', (e) => {
+                // window.location.hash = '';
                 localStorage.removeItem('filteringHashObj');
-            });
-        }
-        if (resetBtn) {
-            resetBtn.addEventListener('click', () => {
-                route;
+                route(e);
                 const filterBlock = new ProductsFiltering();
                 filterBlock.initializeFiltering();
                 const addProducts = new ProductsCard();
-                addProducts.createCardList();
+                addProducts.mainBlockActionsInit();
             });
         }
     }

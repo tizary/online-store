@@ -1,9 +1,14 @@
 import { mainPage } from './pages/mainPage';
+import { cartPage } from './pages/cartPage';
 
 const routes = [
     {
         path: '/',
         data: mainPage,
+    },
+    {
+        path: '/cart',
+        data: cartPage,
     },
 ];
 
