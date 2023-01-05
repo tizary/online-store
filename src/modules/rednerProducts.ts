@@ -22,7 +22,6 @@ export interface ImagesArray {
 export class Products {
     url = 'https://dummyjson.com/products?limit=100';
     async render(url: string) {
-        // const url = 'https://dummyjson.com/products?limit=100';
         const response = await fetch(url);
         if (response.status === 200) {
             const data = await response.json();

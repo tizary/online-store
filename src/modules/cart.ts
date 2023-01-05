@@ -1,19 +1,16 @@
-import { ProductsCard } from './card';
-import { productObject } from './rednerProducts';
+import route from './router';
 
-export class CartAdding extends ProductsCard {
-    productsArr!: productObject[];
-    addingProduct() {
-        const addToCart = document.querySelectorAll('.main__block__card-field__card__footer__button');
-        console.log(this.productsArr);
-        console.log(addToCart);
-        addToCart.forEach((item) => {
-            item.addEventListener('click', () => {
-                console.log(item);
+export class InitializeCart {
+    cardLogo = document.querySelector('.header__cart-logo');
+
+    init() {
+        if (this.cardLogo) {
+            this.cardLogo.addEventListener('click', (e) => {
+                route(e);
             });
-        });
+        }
     }
 }
 
-const cartBtn = new CartAdding();
-cartBtn.addingProduct();
+const initializeCard = new InitializeCart();
+initializeCard.init();
