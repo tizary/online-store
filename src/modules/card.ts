@@ -1,4 +1,5 @@
 import { Products, productObject } from './rednerProducts';
+import route from './router';
 export class ProductsCard extends Products {
     productsArr!: productObject[];
     async createCardList() {
@@ -131,10 +132,10 @@ export class ProductsCard extends Products {
         let cardList = '';
         productsArr.forEach((item: productObject) => {
             cardList += `
-            <div class="main__block__card-field__card" data-id="${2222}">
-                <div class="main__block__card-field__card__header" style="background: url(${
-                    item.thumbnail
-                }) center top / 100% 100% no-repeat;"  data-id="${item.id}"></div>
+            <div class="main__block__card-field__card" data-id="${item.id}">
+                    <div class="main__block__card-field__card__header" style="background: url(${item.thumbnail}) center top / 100% 100% no-repeat;" >
+                    <a class = "main__block__card-field__card__header__anchor" data-id="${item.id}" href="/product_details">                </a>
+                    </div>
                 <div class="main__block__card-field__card__footer">
                     <div class="main__block__card-field__card__footer__name">${item.title}</div>
                     <div class="main__block__card-field__card__footer__info">
@@ -145,7 +146,7 @@ export class ProductsCard extends Products {
                         <p>Rating: ${item.rating}</p>
                         <p>Stock: ${item.stock}</p>
                     </div>
-                    <button class="main__block__card-field__card__footer__button">ADD TO CARD</button>
+                    <button class="main__block__card-field__card__footer__button" data-btnid="${item.id}">ADD TO CARD</button>
                 </div>
             </div>`;
         });
@@ -181,10 +182,13 @@ export class ProductsCard extends Products {
             search.value = this.findParametrs('search')[0];
         }
         const cardField = document.querySelector('.main__block__card-field') as HTMLElement;
-        cardField.addEventListener('click', (event: MouseEvent) => {
+        cardField.addEventListener('click', (event: Event) => {
             this.cardEvents(event);
         });
         this.createCardList();
+        window.addEventListener('popstate', () => {
+            this.createCardList();
+        });
     }
     viewModeBig() {
         const cards = document.querySelectorAll<HTMLElement>('.main__block__card-field__card');
@@ -192,7 +196,6 @@ export class ProductsCard extends Products {
         const cardsImg = document.querySelectorAll<HTMLElement>('.main__block__card-field__card__header');
         const hash: string = window.location.hash;
         if (hash.indexOf('viewMode') === -1) {
-            console.log('hi');
             window.location.hash += `&viewMode=big`;
         } else {
             window.location.hash = hash.replace('small', 'big');
@@ -228,11 +231,12 @@ export class ProductsCard extends Products {
             item.classList.add('hide');
         });
     }
-    cardEvents(event: MouseEvent) {
+    cardEvents(event: Event) {
         const target = event.target;
-        if (target instanceof HTMLElement && target.dataset.id !== undefined) {
+        if (target instanceof HTMLAnchorElement && target.dataset.id !== undefined) {
+            route(event);
             console.log(target.dataset.id);
-            window.location.hash = `product-details/${target.dataset.id}`;
+            // window.location.pathname = `product-details/${target.dataset.id}`;
         }
     }
     searchCards(text: string): void {
@@ -264,6 +268,52 @@ export class ProductsCard extends Products {
         });
         return parametr;
     }
+    addToCart() {
+        let productsInCart: string[];
+        if (localStorage.getItem('productsInCart') && JSON.parse(localStorage.getItem('productsInCart') || '')) {
+            productsInCart = JSON.parse(localStorage.getItem('productsInCart') || '');
+        } else {
+            productsInCart = [];
+        }
+
+        // const cardBtns = document.querySelectorAll('.main__block__card-field__card__footer__button');
+
+        // if (productsInCart.length) {
+        //     cardBtns.forEach((item)=> {
+        //         if ()
+        //     });
+        // }
+
+        function addActiveClass(item: HTMLElement) {
+            item.classList.add('cart-active');
+            item.textContent = 'DROP FROM CART';
+        }
+        function removeActiveClass(item: HTMLElement) {
+            item.classList.remove('cart-active');
+            item.textContent = 'ADD TO CART';
+        }
+        const cardField = document.querySelector('.main__block__card-field');
+        if (cardField) {
+            cardField.addEventListener('click', (e) => {
+                if (e.target && e.target instanceof HTMLElement) {
+                    if (e.target.classList.contains('main__block__card-field__card__footer__button')) {
+                        const currentCardId = e.target.dataset.btnid;
+                        if (currentCardId) {
+                            if (e.target.classList.contains('cart-active')) {
+                                removeActiveClass(e.target);
+                                productsInCart = productsInCart.filter((item) => item !== currentCardId);
+                            } else {
+                                addActiveClass(e.target);
+                                productsInCart.push(currentCardId);
+                            }
+                            localStorage.setItem('toCart', JSON.stringify(productsInCart));
+                        }
+                    }
+                }
+            });
+        }
+    }
 }
 const mainBlockInit = new ProductsCard();
 mainBlockInit.mainBlockActionsInit();
+mainBlockInit.addToCart();
