@@ -1,6 +1,7 @@
 import { Products, productObject } from './rednerProducts';
 import { ProductsCard } from './card';
-import route from './router';
+// import route from './router';
+import { Router } from './router';
 
 let filteringHashObj: Record<string, string[] | number[]>;
 
@@ -72,7 +73,7 @@ export class ProductsFiltering extends Products {
             arr = [];
         }
 
-        const addProducts = new ProductsCard();
+        const mainBlockInit = new ProductsCard();
         const categoryCount = document.querySelectorAll('.category-count');
         function changeCategoryCount(value: string[]) {
             categoryCount.forEach((item) => {
@@ -114,15 +115,15 @@ export class ProductsFiltering extends Products {
 
                                 if (hash.indexOf('category') === -1) {
                                     window.location.hash += `&category=${arr.join(',')}`;
-                                    addProducts.createCardList();
                                     changeCategoryCount(arr);
+                                    mainBlockInit.mainBlockActionsInit();
                                 } else {
                                     window.location.hash = hash.replace(
                                         /category=(\w+|-|\w+,)+\w+/g,
                                         `category=${arr.join(',')}`
                                     );
-                                    addProducts.createCardList();
                                     changeCategoryCount(arr);
+                                    mainBlockInit.mainBlockActionsInit();
                                 }
                             }
                         } else {
@@ -136,11 +137,11 @@ export class ProductsFiltering extends Products {
                                     /category=(\w+|-|\w+,)+\w+/g,
                                     `category=${arr.join(',')}`
                                 );
-                                addProducts.createCardList();
+                                mainBlockInit.mainBlockActionsInit();
                                 changeCategoryCount(arr);
                             } else {
                                 window.location.hash = hash.replace(/&category=(\w+|-|\w+,)+/g, ``);
-                                addProducts.createCardList();
+                                mainBlockInit.mainBlockActionsInit();
                                 changeCategoryCount(arr);
                             }
                         }
@@ -204,7 +205,7 @@ export class ProductsFiltering extends Products {
             arr = [];
         }
 
-        const addProducts = new ProductsCard();
+        const mainBlockInit = new ProductsCard();
         const brandCount = document.querySelectorAll('.brand-count');
         function changeBrandCount(value: string[]) {
             brandCount.forEach((item) => {
@@ -248,14 +249,14 @@ export class ProductsFiltering extends Products {
 
                                 if (hash.indexOf('brand') === -1) {
                                     window.location.hash += `&brand=${arr.join(',')}`;
-                                    addProducts.createCardList();
+                                    mainBlockInit.mainBlockActionsInit();
                                     changeBrandCount(arr);
                                 } else {
                                     window.location.hash = hash.replace(
                                         /brand=(\w+|-|'|\w+,|%20)+\w+/g,
                                         `brand=${arr.join(',')}`
                                     );
-                                    addProducts.createCardList();
+                                    mainBlockInit.mainBlockActionsInit();
                                     changeBrandCount(arr);
                                 }
                             }
@@ -271,11 +272,11 @@ export class ProductsFiltering extends Products {
                                     /brand=(\w+|-|'|\w+,|%20)+\w+/g,
                                     `brand=${arr.join(',')}`
                                 );
-                                addProducts.createCardList();
+                                mainBlockInit.mainBlockActionsInit();
                                 changeBrandCount(arr);
                             } else {
                                 window.location.hash = hash.replace(/&brand=(\w+|-|'|\w+,|%20)+/g, ``);
-                                addProducts.createCardList();
+                                mainBlockInit.mainBlockActionsInit();
                                 changeBrandCount(arr);
                             }
                         }
@@ -317,7 +318,6 @@ export class ProductsFiltering extends Products {
         } else {
             arr = [];
         }
-        // const addProducts = new ProductsCard();
 
         const rangeInput: NodeListOf<HTMLInputElement> = document.querySelectorAll('.price-track');
         const progress: HTMLElement | null = document.querySelector('.aside__price-block .progress');
@@ -373,9 +373,8 @@ export class ProductsFiltering extends Products {
                 localStorage.setItem('filteringHashObj', JSON.stringify(filteringHashObj));
             });
             input.addEventListener('mouseup', () => {
-                const addProducts = new ProductsCard();
-
-                addProducts.createCardList();
+                const mainBlockInit = new ProductsCard();
+                mainBlockInit.mainBlockActionsInit();
             });
         });
     }
@@ -412,7 +411,7 @@ export class ProductsFiltering extends Products {
         } else {
             arr = [];
         }
-        const addProducts = new ProductsCard();
+        const mainBlockInit = new ProductsCard();
 
         const rangeStockInput: NodeListOf<HTMLInputElement> = document.querySelectorAll('.stock-track');
         const progress: HTMLElement | null = document.querySelector('.aside__stock-block .progress');
@@ -468,7 +467,7 @@ export class ProductsFiltering extends Products {
                 localStorage.setItem('filteringHashObj', JSON.stringify(filteringHashObj));
             });
             input.addEventListener('mouseup', () => {
-                addProducts.createCardList();
+                mainBlockInit.mainBlockActionsInit();
             });
         });
     }
@@ -479,11 +478,13 @@ export class ProductsFiltering extends Products {
             resetBtn.addEventListener('click', (e) => {
                 // window.location.hash = '';
                 localStorage.removeItem('filteringHashObj');
-                route(e);
+                // route(e);
+                const router = new Router();
+                router.initRoute(e);
                 const filterBlock = new ProductsFiltering();
                 filterBlock.initializeFiltering();
-                const addProducts = new ProductsCard();
-                addProducts.mainBlockActionsInit();
+                const mainBlockInit = new ProductsCard();
+                mainBlockInit.mainBlockActionsInit();
             });
         }
     }

@@ -92,15 +92,33 @@
         }
     }
 
-    &__cart-logo {
+    &__cart {
         margin-left: 230px;
-        width: 35px;
-        height: 29px;
-        background: url('./img/cart.svg');
-        background-size: contain;
-        background-repeat: no-repeat;
-        cursor: pointer;
+
+
+        &-count {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: $cart-count;
+            color: $dark-blue;
+            font-weight: 600;
+        }
+
+        &-logo {
+            display: inline-block;
+            width: 35px;
+            height: 29px;
+            background: url('./img/cart.svg');
+            background-size: contain;
+            background-repeat: no-repeat;
+            cursor: pointer;
+        }
     }
+
 }
 
 .main {

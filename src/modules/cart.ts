@@ -1,4 +1,5 @@
-import route from './router';
+// import route from './router';
+import { Router } from './router';
 
 export class InitializeCart {
     cardLogo = document.querySelector('.header__cart-logo');
@@ -6,7 +7,9 @@ export class InitializeCart {
     init() {
         if (this.cardLogo) {
             this.cardLogo.addEventListener('click', (e) => {
-                route(e);
+                // route(e);
+                const router = new Router();
+                router.initRoute(e);
             });
         }
     }

@@ -160,7 +160,7 @@ export class ProductsCard extends Products {
             this.viewModeBig();
         }
     }
-    mainBlockActionsInit() {
+    async mainBlockActionsInit() {
         document.querySelector('.main__block__header__view-mode__big')?.addEventListener('click', this.viewModeBig);
         document.querySelector('.main__block__header__view-mode__small')?.addEventListener('click', this.viewModeSmall);
         const select = document.querySelector('.main__block__header-select') as HTMLSelectElement;
@@ -182,7 +182,8 @@ export class ProductsCard extends Products {
         cardField.addEventListener('click', (event: MouseEvent) => {
             this.cardEvents(event);
         });
-        this.createCardList();
+        await this.createCardList();
+        this.addToCart();
     }
     viewModeBig() {
         const cards = document.querySelectorAll<HTMLElement>('.main__block__card-field__card');
@@ -268,20 +269,29 @@ export class ProductsCard extends Products {
         return parametr;
     }
     addToCart() {
+        const cartCountProducts = document.querySelector('.header__cart-count');
         let productsInCart: string[];
-        if (localStorage.getItem('productsInCart') && JSON.parse(localStorage.getItem('productsInCart') || '')) {
-            productsInCart = JSON.parse(localStorage.getItem('productsInCart') || '');
+        if (localStorage.getItem('toCart') && JSON.parse(localStorage.getItem('toCart') || '') && cartCountProducts) {
+            productsInCart = JSON.parse(localStorage.getItem('toCart') || '');
+            cartCountProducts.textContent = `${productsInCart.length}`;
         } else {
             productsInCart = [];
+            if (cartCountProducts) {
+                cartCountProducts.textContent = '0';
+            }
         }
 
-        // const cardBtns = document.querySelectorAll('.main__block__card-field__card__footer__button');
-
-        // if (productsInCart.length) {
-        //     cardBtns.forEach((item)=> {
-        //         if ()
-        //     });
-        // }
+        const cardBtns = document.querySelectorAll('.main__block__card-field__card__footer__button');
+        if (productsInCart.length) {
+            [...cardBtns].filter((item) => {
+                if (item instanceof HTMLElement && item.dataset.btnid) {
+                    if (productsInCart.indexOf(item.dataset.btnid) !== -1) {
+                        item.classList.add('cart-active');
+                        item.textContent = 'DROP FROM CART';
+                    }
+                }
+            });
+        }
 
         function addActiveClass(item: HTMLElement) {
             item.classList.add('cart-active');
@@ -291,19 +301,27 @@ export class ProductsCard extends Products {
             item.classList.remove('cart-active');
             item.textContent = 'ADD TO CART';
         }
+
         const cardField = document.querySelector('.main__block__card-field');
-        if (cardField) {
+        if (cardField && cartCountProducts) {
             cardField.addEventListener('click', (e) => {
                 if (e.target && e.target instanceof HTMLElement) {
                     if (e.target.classList.contains('main__block__card-field__card__footer__button')) {
                         const currentCardId = e.target.dataset.btnid;
+                        const count = cartCountProducts.textContent;
                         if (currentCardId) {
                             if (e.target.classList.contains('cart-active')) {
                                 removeActiveClass(e.target);
                                 productsInCart = productsInCart.filter((item) => item !== currentCardId);
+                                if (count) {
+                                    cartCountProducts.textContent = `${+count - 1}`;
+                                }
                             } else {
                                 addActiveClass(e.target);
                                 productsInCart.push(currentCardId);
+                                if (count) {
+                                    cartCountProducts.textContent = `${+count + 1}`;
+                                }
                             }
                             localStorage.setItem('toCart', JSON.stringify(productsInCart));
                         }
@@ -315,4 +333,3 @@ export class ProductsCard extends Products {
 }
 const mainBlockInit = new ProductsCard();
 mainBlockInit.mainBlockActionsInit();
-mainBlockInit.addToCart();
