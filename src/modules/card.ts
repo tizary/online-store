@@ -1,4 +1,5 @@
 import { Products, productObject } from './rednerProducts';
+import { localStore } from './localStore';
 export class ProductsCard extends Products {
     productsArr!: productObject[];
     async createCardList() {
@@ -128,8 +129,29 @@ export class ProductsCard extends Products {
             });
             productsArr = searchArr;
         }
+
         let cardList = '';
+        const headerPriceAmount = document.querySelector('.header__price-amount');
+        const priceStore = localStore.getPrice();
+        if (headerPriceAmount) {
+            headerPriceAmount.textContent = priceStore.reduce((acc: number, item: string) => +acc + +item);
+        }
+        const productsStore = localStore.getProducts();
+        const cartCount = document.querySelector('.header__cart-count');
+        if (cartCount) {
+            cartCount.textContent = productsStore.length;
+        }
         productsArr.forEach((item: productObject) => {
+            let activeClass = '';
+            let activeText = '';
+
+            if (productsStore.indexOf(`${item.id}`) === -1) {
+                activeText = 'ADD TO CART';
+            } else {
+                activeClass = ' cart-active';
+                activeText = 'DROP FROM CART';
+            }
+
             cardList += `
             <div class="main__block__card-field__card" data-id="${item.id}">
                 <div class="main__block__card-field__card__header" style="background: url(${item.thumbnail}) center top / 100% 100% no-repeat;"></div>
@@ -143,7 +165,7 @@ export class ProductsCard extends Products {
                         <p>Rating: ${item.rating}</p>
                         <p>Stock: ${item.stock}</p>
                     </div>
-                    <button class="main__block__card-field__card__footer__button" data-btnid="${item.id}">ADD TO CARD</button>
+                    <button class="main__block__card-field__card__footer__button${activeClass}" data-btnid="${item.id}" data-btnprice="${item.price}">${activeText}</button>
                 </div>
             </div>`;
         });
@@ -228,16 +250,16 @@ export class ProductsCard extends Products {
         });
     }
     cardEvents(event: MouseEvent) {
-        const cardButton2 = document.querySelector('.main__block__card-field__card__footer__button') as HTMLElement;
+        // const cardButton2 = document.querySelector('.main__block__card-field__card__footer__button') as HTMLElement;
         const target = event.target;
         if (target != null) {
             console.log(target);
         }
-        if (event.target != cardButton2) {
-            console.log('не кнопка');
-        } else {
-            console.log('кнопка');
-        }
+        // if (event.target != cardButton2) {
+        //     console.log('не кнопка');
+        // } else {
+        //     console.log('кнопка');
+        // }
     }
     searchCards(text: string): void {
         const hash: string = window.location.hash;
@@ -268,66 +290,37 @@ export class ProductsCard extends Products {
         });
         return parametr;
     }
-    addToCart() {
-        const cartCountProducts = document.querySelector('.header__cart-count');
-        let productsInCart: string[];
-        if (localStorage.getItem('toCart') && JSON.parse(localStorage.getItem('toCart') || '') && cartCountProducts) {
-            productsInCart = JSON.parse(localStorage.getItem('toCart') || '');
-            cartCountProducts.textContent = `${productsInCart.length}`;
-        } else {
-            productsInCart = [];
-            if (cartCountProducts) {
-                cartCountProducts.textContent = '0';
+    changeClick(e: Event) {
+        const cartCount = document.querySelector('.header__cart-count');
+        const headerPriceAmount = document.querySelector('.header__price-amount');
+        if (e.target && e.target instanceof HTMLElement) {
+            if (e.target.classList.contains('main__block__card-field__card__footer__button')) {
+                const currentCardId = e.target.dataset.btnid;
+                const currentCardPrice = e.target.dataset.btnprice;
+                if (currentCardId && currentCardPrice) {
+                    const { pushProduct, productsInCart } = localStore.putProducts(currentCardId);
+                    if (pushProduct) {
+                        e.target.classList.add('cart-active');
+                        e.target.innerHTML = 'DROP FROM CART';
+                    } else {
+                        e.target.classList.remove('cart-active');
+                        e.target.innerHTML = 'ADD TO CART';
+                    }
+                    if (cartCount) {
+                        cartCount.textContent = productsInCart.length;
+                    }
+                    const { priceInCart } = localStore.putPrice(currentCardPrice);
+                    if (headerPriceAmount) {
+                        headerPriceAmount.textContent = priceInCart.reduce((acc: number, item: string) => +acc + +item);
+                    }
+                }
             }
         }
-
-        const cardBtns = document.querySelectorAll('.main__block__card-field__card__footer__button');
-        if (productsInCart.length) {
-            [...cardBtns].filter((item) => {
-                if (item instanceof HTMLElement && item.dataset.btnid) {
-                    if (productsInCart.indexOf(item.dataset.btnid) !== -1) {
-                        item.classList.add('cart-active');
-                        item.textContent = 'DROP FROM CART';
-                    }
-                }
-            });
-        }
-
-        function addActiveClass(item: HTMLElement) {
-            item.classList.add('cart-active');
-            item.textContent = 'DROP FROM CART';
-        }
-        function removeActiveClass(item: HTMLElement) {
-            item.classList.remove('cart-active');
-            item.textContent = 'ADD TO CART';
-        }
-
+    }
+    addToCart() {
         const cardField = document.querySelector('.main__block__card-field');
-        if (cardField && cartCountProducts) {
-            cardField.addEventListener('click', (e) => {
-                if (e.target && e.target instanceof HTMLElement) {
-                    if (e.target.classList.contains('main__block__card-field__card__footer__button')) {
-                        const currentCardId = e.target.dataset.btnid;
-                        const count = cartCountProducts.textContent;
-                        if (currentCardId) {
-                            if (e.target.classList.contains('cart-active')) {
-                                removeActiveClass(e.target);
-                                productsInCart = productsInCart.filter((item) => item !== currentCardId);
-                                if (count) {
-                                    cartCountProducts.textContent = `${+count - 1}`;
-                                }
-                            } else {
-                                addActiveClass(e.target);
-                                productsInCart.push(currentCardId);
-                                if (count) {
-                                    cartCountProducts.textContent = `${+count + 1}`;
-                                }
-                            }
-                            localStorage.setItem('toCart', JSON.stringify(productsInCart));
-                        }
-                    }
-                }
-            });
+        if (cardField) {
+            cardField.addEventListener('click', this.changeClick, false);
         }
     }
 }

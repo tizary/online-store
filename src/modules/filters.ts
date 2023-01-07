@@ -1,6 +1,5 @@
 import { Products, productObject } from './rednerProducts';
 import { ProductsCard } from './card';
-// import route from './router';
 import { Router } from './router';
 
 let filteringHashObj: Record<string, string[] | number[]>;
@@ -73,7 +72,6 @@ export class ProductsFiltering extends Products {
             arr = [];
         }
 
-        const mainBlockInit = new ProductsCard();
         const categoryCount = document.querySelectorAll('.category-count');
         function changeCategoryCount(value: string[]) {
             categoryCount.forEach((item) => {
@@ -116,14 +114,12 @@ export class ProductsFiltering extends Products {
                                 if (hash.indexOf('category') === -1) {
                                     window.location.hash += `&category=${arr.join(',')}`;
                                     changeCategoryCount(arr);
-                                    mainBlockInit.mainBlockActionsInit();
                                 } else {
                                     window.location.hash = hash.replace(
                                         /category=(\w+|-|\w+,)+\w+/g,
                                         `category=${arr.join(',')}`
                                     );
                                     changeCategoryCount(arr);
-                                    mainBlockInit.mainBlockActionsInit();
                                 }
                             }
                         } else {
@@ -137,16 +133,16 @@ export class ProductsFiltering extends Products {
                                     /category=(\w+|-|\w+,)+\w+/g,
                                     `category=${arr.join(',')}`
                                 );
-                                mainBlockInit.mainBlockActionsInit();
                                 changeCategoryCount(arr);
                             } else {
                                 window.location.hash = hash.replace(/&category=(\w+|-|\w+,)+/g, ``);
-                                mainBlockInit.mainBlockActionsInit();
                                 changeCategoryCount(arr);
                             }
                         }
                     }
                 }
+                const mainBlockInit = new ProductsCard();
+                mainBlockInit.mainBlockActionsInit();
             });
         });
     }
@@ -205,7 +201,6 @@ export class ProductsFiltering extends Products {
             arr = [];
         }
 
-        const mainBlockInit = new ProductsCard();
         const brandCount = document.querySelectorAll('.brand-count');
         function changeBrandCount(value: string[]) {
             brandCount.forEach((item) => {
@@ -249,14 +244,12 @@ export class ProductsFiltering extends Products {
 
                                 if (hash.indexOf('brand') === -1) {
                                     window.location.hash += `&brand=${arr.join(',')}`;
-                                    mainBlockInit.mainBlockActionsInit();
                                     changeBrandCount(arr);
                                 } else {
                                     window.location.hash = hash.replace(
                                         /brand=(\w+|-|'|\w+,|%20)+\w+/g,
                                         `brand=${arr.join(',')}`
                                     );
-                                    mainBlockInit.mainBlockActionsInit();
                                     changeBrandCount(arr);
                                 }
                             }
@@ -272,16 +265,16 @@ export class ProductsFiltering extends Products {
                                     /brand=(\w+|-|'|\w+,|%20)+\w+/g,
                                     `brand=${arr.join(',')}`
                                 );
-                                mainBlockInit.mainBlockActionsInit();
                                 changeBrandCount(arr);
                             } else {
                                 window.location.hash = hash.replace(/&brand=(\w+|-|'|\w+,|%20)+/g, ``);
-                                mainBlockInit.mainBlockActionsInit();
                                 changeBrandCount(arr);
                             }
                         }
                     }
                 }
+                const mainBlockInit = new ProductsCard();
+                mainBlockInit.mainBlockActionsInit();
             });
         });
     }
@@ -411,7 +404,6 @@ export class ProductsFiltering extends Products {
         } else {
             arr = [];
         }
-        const mainBlockInit = new ProductsCard();
 
         const rangeStockInput: NodeListOf<HTMLInputElement> = document.querySelectorAll('.stock-track');
         const progress: HTMLElement | null = document.querySelector('.aside__stock-block .progress');
@@ -467,6 +459,7 @@ export class ProductsFiltering extends Products {
                 localStorage.setItem('filteringHashObj', JSON.stringify(filteringHashObj));
             });
             input.addEventListener('mouseup', () => {
+                const mainBlockInit = new ProductsCard();
                 mainBlockInit.mainBlockActionsInit();
             });
         });
