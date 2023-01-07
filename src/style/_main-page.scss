@@ -27,6 +27,7 @@
 }
 
 .body {
+    min-width: 1160px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -70,6 +71,7 @@
     }
 
     &__price {
+        width: 250px;
         font-size: 24px;
         font-weight: 600;
         color: $main-color;
@@ -92,15 +94,33 @@
         }
     }
 
-    &__cart-logo {
+    &__cart {
         margin-left: 230px;
-        width: 35px;
-        height: 29px;
-        background: url('./img/cart.svg');
-        background-size: contain;
-        background-repeat: no-repeat;
-        cursor: pointer;
+
+
+        &-count {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: $cart-count;
+            color: $dark-blue;
+            font-weight: 600;
+        }
+
+        &-logo {
+            display: inline-block;
+            width: 35px;
+            height: 29px;
+            background: url('./img/cart.svg');
+            background-size: contain;
+            background-repeat: no-repeat;
+            cursor: pointer;
+        }
     }
+
 }
 
 .main {
@@ -404,22 +424,25 @@
           &__card {
             position: relative;
             width: 300px;
+            height: 480px;
             margin: 10px;
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 16px 32px rgb(0 0 0 / 30%);
             &__header {
-              height: 200px;
+              height: 55%;
               &__img {
-                position: absolute;
-                height: 51%;
+                position: relative;
+                height: 100%;
                 width: 100%;
                 z-index: 0;
               }
               &__anchor {
                 display: block;
-                height: 190px;
-                position: relative;
+                position: absolute;
+                width: 100%;
+                height: 55%;
+                top: 0;
                 z-index: 1;
               }
             }
@@ -427,6 +450,8 @@
               display: flex;
               flex-direction: column;
               align-items: center;
+              justify-content: end;
+              height: 45%;
               padding: 8px;
               background: $footer-bg;
               &__name {

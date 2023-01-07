@@ -2,6 +2,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const EslingPlugin = require('eslint-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 
 const mode = process.env.NODE_ENV || 'development';
 const devMode = mode === 'development';
@@ -14,9 +15,11 @@ module.exports = {
     devtool,
     devServer: {
         open: true,
+        historyApiFallback: true,
     },
     entry: path.resolve(__dirname, 'src', 'index'),
     output: {
+        publicPath: '/',
         path: path.resolve(__dirname, 'dist'),
         clean: true,
         filename: 'index.js',
@@ -30,6 +33,9 @@ module.exports = {
             filename: 'index.css',
         }),
         new EslingPlugin({ extensions: 'ts' }),
+        new CopyPlugin({
+            patterns: [{ from: 'src', to: 'dist' }],
+        }),
     ],
     resolve: {
         extensions: ['.ts', '.js'],
@@ -47,11 +53,6 @@ module.exports = {
             },
             {
                 test: /\.(png|jpe?g|gif)$/i,
-                // use: [
-                //     {
-                //         loader: 'file-loader',
-                //     },
-                // ],
                 type: 'asset/resource',
             },
         ],
