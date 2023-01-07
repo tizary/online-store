@@ -27,7 +27,26 @@ export const mainPage = `
                             <div class="aside__stock-block"></div>
                         </div>
                     </aside>
-                    <div class="main__block"></div>
+                    <div class="main__block">
+                        <div class="main__block__header">
+                            <select id = 'select' class="main__block__header-select">
+                                <option value="" selected>Sort products</option>
+                                <option value="1">Sort by price min-max</option>
+                                <option value="2">Sort by price max-min</option>
+                                <option value="3">Sort by rating min-max</option>
+                                <option value="4">Sort by rating max-min</option>
+                                <option value="5">Sort by discount min-max</option>
+                                <option value="6">Sort by discount max-min</option>
+                            </select>
+                            <div class="main__block__header-found">Found:</div>
+                            <input placeholder="Search product" type="text" id="input_card" class="main__block__header-search">
+                            <div class="main__block__header__view-mode">
+                                <div class="main__block__header__view-mode__small"></div>
+                                <div class="main__block__header__view-mode__big"></div>
+                            </div>
+                        </div>
+                        <div class="main__block__card-field"></div>
+                    </div>
                 </div>
             </div>
 `;
