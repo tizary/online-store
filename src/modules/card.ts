@@ -1,5 +1,6 @@
 import { Products, productObject } from './rednerProducts';
 import route from './router';
+import { DetailsPage } from './productDetails';
 export class ProductsCard extends Products {
     productsArr!: productObject[];
     async createCardList() {
@@ -133,8 +134,9 @@ export class ProductsCard extends Products {
         productsArr.forEach((item: productObject) => {
             cardList += `
             <div class="main__block__card-field__card" data-id="${item.id}">
-                    <div class="main__block__card-field__card__header" style="background: url(${item.thumbnail}) center top / 100% 100% no-repeat;" >
-                    <a class = "main__block__card-field__card__header__anchor" data-id="${item.id}" href="/product_details">                </a>
+                    <div class="main__block__card-field__card__header">
+                    <img class="main__block__card-field__card__header__img" src="${item.thumbnail}" loading="lazy" alt="${item.category}">
+                    <a class = "main__block__card-field__card__header__anchor" data-id="${item.id}" href="/product_details/${item.id}"></a>
                     </div>
                 <div class="main__block__card-field__card__footer">
                     <div class="main__block__card-field__card__footer__name">${item.title}</div>
@@ -235,8 +237,8 @@ export class ProductsCard extends Products {
         const target = event.target;
         if (target instanceof HTMLAnchorElement && target.dataset.id !== undefined) {
             route(event);
-            console.log(target.dataset.id);
-            // window.location.pathname = `product-details/${target.dataset.id}`;
+            const detailsPage = new DetailsPage();
+            detailsPage.renderDetailsPage();
         }
     }
     searchCards(text: string): void {

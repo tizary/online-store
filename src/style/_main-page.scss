@@ -410,13 +410,17 @@
             box-shadow: 0 16px 32px rgb(0 0 0 / 30%);
             &__header {
               height: 200px;
-              padding: 5px;
-              &:hover {
-                cursor: pointer;
+              &__img {
+                position: absolute;
+                height: 51%;
+                width: 100%;
+                z-index: 0;
               }
               &__anchor {
                 display: block;
                 height: 190px;
+                position: relative;
+                z-index: 1;
               }
             }
             &__footer {
