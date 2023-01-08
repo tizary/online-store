@@ -4,19 +4,12 @@ export interface productObject {
     description: string;
     discountPercentage: number;
     id: number;
-    images: ImagesArray;
+    images: string[];
     price: number;
     rating: number;
     stock: number;
     thumbnail: string;
     title: string;
-}
-export interface ImagesArray {
-    0: string;
-    1: string;
-    2: string;
-    3: string;
-    4: string;
 }
 
 export class Products {

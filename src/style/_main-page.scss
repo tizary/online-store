@@ -27,6 +27,7 @@
 }
 
 .body {
+    min-width: 1160px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -423,22 +424,39 @@
           &__card {
             position: relative;
             width: 300px;
+            height: 480px;
             margin: 10px;
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 16px 32px rgb(0 0 0 / 30%);
             &__header {
-              height: 200px;
-              padding: 5px;
+              height: 55%;
+              &__img {
+                position: relative;
+                height: 100%;
+                width: 100%;
+                z-index: 0;
+              }
+              &__anchor {
+                display: block;
+                position: absolute;
+                width: 100%;
+                height: 55%;
+                top: 0;
+                z-index: 1;
+              }
             }
             &__footer {
               display: flex;
               flex-direction: column;
               align-items: center;
+              justify-content: end;
+              height: 45%;
               padding: 8px;
               background: $footer-bg;
               &__name {
                 text-align: center;
+                font-weight: 800;
                 padding: 5px;
               }
               &__info {

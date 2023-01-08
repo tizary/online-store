@@ -1,4 +1,7 @@
 import { Products, productObject } from './rednerProducts';
+import { Router } from './router';
+const router = new Router();
+import { DetailsPage } from './productDetails';
 import { localStore } from './localStore';
 import { headerBlock } from './headerBlock';
 
@@ -149,13 +152,16 @@ export class ProductsCard extends Products {
 
             cardList += `
             <div class="main__block__card-field__card" data-id="${item.id}">
-                <div class="main__block__card-field__card__header" style="background: url(${item.thumbnail}) center top / 100% 100% no-repeat;"></div>
+                    <div class="main__block__card-field__card__header">
+                    <img class="main__block__card-field__card__header__img" src="${item.thumbnail}" loading="lazy" alt="${item.category}">
+                    <a class = "main__block__card-field__card__header__anchor" data-id="${item.id}" href="/product_details/${item.id}"></a>
+                    </div>
                 <div class="main__block__card-field__card__footer">
                     <div class="main__block__card-field__card__footer__name">${item.title}</div>
                     <div class="main__block__card-field__card__footer__info">
                         <p>Categoty: ${item.category}</p>
                         <p>Brand: ${item.brand}</p>
-                        <p>Price: ${item.price}</p>
+                        <p>Price: ${item.price}€</p>
                         <p>Discount: ${item.discountPercentage}</p>
                         <p>Rating: ${item.rating}</p>
                         <p>Stock: ${item.stock}</p>
@@ -196,29 +202,32 @@ export class ProductsCard extends Products {
             search.value = this.findParametrs('search')[0];
         }
         const cardField = document.querySelector('.main__block__card-field') as HTMLElement;
-        cardField.addEventListener('click', (event: MouseEvent) => {
+        cardField.addEventListener('click', (event: Event) => {
             this.cardEvents(event);
         });
-        await this.createCardList();
+        this.createCardList();
+        window.addEventListener('popstate', () => {
+            this.createCardList();
+        });
         this.addToCart();
     }
     viewModeBig() {
         const cards = document.querySelectorAll<HTMLElement>('.main__block__card-field__card');
         const cardsInfo = document.querySelectorAll<HTMLElement>('.main__block__card-field__card__footer__info');
-        const cardsImg = document.querySelectorAll<HTMLElement>('.main__block__card-field__card__header');
+        // const cardsImg = document.querySelectorAll<HTMLElement>('.main__block__card-field__card__header');
         const hash: string = window.location.hash;
         if (hash.indexOf('viewMode') === -1) {
-            console.log('hi');
             window.location.hash += `&viewMode=big`;
         } else {
             window.location.hash = hash.replace('small', 'big');
         }
         cards.forEach((item): void => {
             item.style.width = '300px';
+            item.style.height = '420px';
         });
-        cardsImg.forEach((item): void => {
-            item.style.height = '200px';
-        });
+        // cardsImg.forEach((item): void => {
+        //     item.style.height = '200px';
+        // });
         cardsInfo.forEach((item): void => {
             item.classList.remove('hide');
         });
@@ -226,7 +235,7 @@ export class ProductsCard extends Products {
     viewModeSmall() {
         const cards = document.querySelectorAll<HTMLElement>('.main__block__card-field__card');
         const cardsInfo = document.querySelectorAll<HTMLElement>('.main__block__card-field__card__footer__info');
-        const cardsImg = document.querySelectorAll<HTMLElement>('.main__block__card-field__card__header');
+        // const cardsImg = document.querySelectorAll<HTMLElement>('.main__block__card-field__card__header');
         const hash: string = window.location.hash;
         if (hash.indexOf('viewMode') === -1) {
             console.log('hi');
@@ -236,24 +245,21 @@ export class ProductsCard extends Products {
         }
         cards.forEach((item): void => {
             item.style.width = '200px';
+            item.style.height = '200px';
         });
-        cardsImg.forEach((item): void => {
-            item.style.height = '150px';
-        });
+        // cardsImg.forEach((item): void => {
+        //     item.style.height = '150px';
+        // });
         cardsInfo.forEach((item): void => {
             item.classList.add('hide');
         });
     }
-    cardEvents(event: MouseEvent) {
-        const cardButton2 = document.querySelector('.main__block__card-field__card__footer__button') as HTMLElement;
+    cardEvents(event: Event) {
         const target = event.target;
-        if (target != null) {
-            console.log(target);
-        }
-        if (event.target != cardButton2) {
-            console.log('не кнопка');
-        } else {
-            console.log('кнопка');
+        if (target instanceof HTMLAnchorElement && target.dataset.id !== undefined) {
+            router.initRoute(event);
+            const detailsPage = new DetailsPage();
+            detailsPage.renderDetailsPage();
         }
     }
     searchCards(text: string): void {
@@ -288,7 +294,10 @@ export class ProductsCard extends Products {
     changeClick(e: Event) {
         const headerPriceAmount = document.querySelector('.header__price-amount');
         if (e.target && e.target instanceof HTMLElement) {
-            if (e.target.classList.contains('main__block__card-field__card__footer__button')) {
+            if (
+                e.target.classList.contains('main__block__card-field__card__footer__button') ||
+                e.target.classList.contains('details__container__info__button__add')
+            ) {
                 const currentCardId = e.target.dataset.btnid;
                 const currentCardPrice = e.target.dataset.btnprice;
                 if (currentCardId && currentCardPrice) {
@@ -318,6 +327,10 @@ export class ProductsCard extends Products {
 
                     const { priceInCart } = localStore.putPrice(currentCardPrice);
                     if (headerPriceAmount) {
+                        headerPriceAmount.textContent = priceInCart.reduce(
+                            (acc: number, item: string) => +acc + +item,
+                            0
+                        );
                         headerPriceAmount.textContent = priceInCart.reduce(
                             (acc: number, item: string) => +acc + +item,
                             0
