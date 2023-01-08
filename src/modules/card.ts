@@ -1,8 +1,11 @@
 import { Products, productObject } from './rednerProducts';
 import { localStore } from './localStore';
+import { headerBlock } from './headerBlock';
+
 export class ProductsCard extends Products {
     productsArr!: productObject[];
     async createCardList() {
+        const renderProducts = await this.render(this.url);
         const hash: string = window.location.hash;
         let productsArr: productObject[] = [];
         if (
@@ -11,7 +14,7 @@ export class ProductsCard extends Products {
             hash.indexOf('price') === -1 &&
             hash.indexOf('stock') === -1
         ) {
-            productsArr = await this.render(this.url);
+            productsArr = renderProducts;
         } else {
             if (hash.indexOf('category') !== 0) {
                 let allArr;
@@ -19,7 +22,7 @@ export class ProductsCard extends Products {
                 if (productsArr.length !== 0) {
                     allArr = productsArr;
                 } else {
-                    allArr = await this.render(this.url);
+                    allArr = renderProducts;
                 }
                 const arr: string[] = this.findParametrs('category');
                 allArr.forEach((item: productObject) => {
@@ -35,7 +38,7 @@ export class ProductsCard extends Products {
                 if (productsArr.length !== 0) {
                     allArr = productsArr;
                 } else {
-                    allArr = await this.render(this.url);
+                    allArr = renderProducts;
                 }
                 const arr: string[] = this.findParametrs('brand');
                 allArr.forEach((item: productObject) => {
@@ -51,7 +54,7 @@ export class ProductsCard extends Products {
                 if (productsArr.length !== 0) {
                     allArr = productsArr;
                 } else {
-                    allArr = await this.render(this.url);
+                    allArr = renderProducts;
                 }
                 const arr: string[] = this.findParametrs('price');
                 allArr.forEach((item: productObject) => {
@@ -67,7 +70,7 @@ export class ProductsCard extends Products {
                 if (productsArr.length !== 0) {
                     allArr = productsArr;
                 } else {
-                    allArr = await this.render(this.url);
+                    allArr = renderProducts;
                 }
                 const arr: string[] = this.findParametrs('stock');
                 allArr.forEach((item: productObject) => {
@@ -80,7 +83,7 @@ export class ProductsCard extends Products {
         }
         if (hash.indexOf('sort') !== -1) {
             if (productsArr.length === 0) {
-                productsArr = await this.render(this.url);
+                productsArr = renderProducts;
             }
             const select = document.getElementById('select') as HTMLSelectElement;
             switch (+select.value) {
@@ -119,7 +122,7 @@ export class ProductsCard extends Products {
             if (productsArr.length !== 0) {
                 allArr = productsArr;
             } else {
-                allArr = await this.render(this.url);
+                allArr = renderProducts;
             }
             const arr: string[] = this.findParametrs('search');
             allArr.forEach((item: productObject) => {
@@ -131,16 +134,8 @@ export class ProductsCard extends Products {
         }
 
         let cardList = '';
-        const headerPriceAmount = document.querySelector('.header__price-amount');
-        const priceStore = localStore.getPrice();
-        if (headerPriceAmount) {
-            headerPriceAmount.textContent = priceStore.reduce((acc: number, item: string) => +acc + +item);
-        }
+        headerBlock.initHeader();
         const productsStore = localStore.getProducts();
-        const cartCount = document.querySelector('.header__cart-count');
-        if (cartCount) {
-            cartCount.textContent = productsStore.length;
-        }
         productsArr.forEach((item: productObject) => {
             let activeClass = '';
             let activeText = '';
@@ -250,16 +245,16 @@ export class ProductsCard extends Products {
         });
     }
     cardEvents(event: MouseEvent) {
-        // const cardButton2 = document.querySelector('.main__block__card-field__card__footer__button') as HTMLElement;
+        const cardButton2 = document.querySelector('.main__block__card-field__card__footer__button') as HTMLElement;
         const target = event.target;
         if (target != null) {
             console.log(target);
         }
-        // if (event.target != cardButton2) {
-        //     console.log('не кнопка');
-        // } else {
-        //     console.log('кнопка');
-        // }
+        if (event.target != cardButton2) {
+            console.log('не кнопка');
+        } else {
+            console.log('кнопка');
+        }
     }
     searchCards(text: string): void {
         const hash: string = window.location.hash;
@@ -291,28 +286,44 @@ export class ProductsCard extends Products {
         return parametr;
     }
     changeClick(e: Event) {
-        const cartCount = document.querySelector('.header__cart-count');
         const headerPriceAmount = document.querySelector('.header__price-amount');
         if (e.target && e.target instanceof HTMLElement) {
             if (e.target.classList.contains('main__block__card-field__card__footer__button')) {
                 const currentCardId = e.target.dataset.btnid;
                 const currentCardPrice = e.target.dataset.btnprice;
                 if (currentCardId && currentCardPrice) {
-                    const { pushProduct, productsInCart } = localStore.putProducts(currentCardId);
+                    const { pushProduct } = localStore.putProducts(currentCardId);
                     if (pushProduct) {
                         e.target.classList.add('cart-active');
                         e.target.innerHTML = 'DROP FROM CART';
+                        const curInfo = localStore.getHeaderInfo();
+                        if (curInfo.price && curInfo.count) {
+                            localStore.putHeaderInfo(curInfo.price + parseInt(currentCardPrice), curInfo.count + 1);
+                        } else {
+                            localStore.putHeaderInfo(parseInt(currentCardPrice), 1);
+                        }
+                        headerBlock.initHeader();
                     } else {
                         e.target.classList.remove('cart-active');
                         e.target.innerHTML = 'ADD TO CART';
+                        const curInfo = localStore.getHeaderInfo();
+                        const curCountStore = localStore.getCount();
+                        const curCount = parseInt(curCountStore[currentCardId]);
+                        localStore.putHeaderInfo(
+                            curInfo.price - parseInt(currentCardPrice) * curCount,
+                            curInfo.count - curCount
+                        );
                     }
-                    if (cartCount) {
-                        cartCount.textContent = productsInCart.length;
-                    }
+                    headerBlock.initHeader();
+
                     const { priceInCart } = localStore.putPrice(currentCardPrice);
                     if (headerPriceAmount) {
-                        headerPriceAmount.textContent = priceInCart.reduce((acc: number, item: string) => +acc + +item);
+                        headerPriceAmount.textContent = priceInCart.reduce(
+                            (acc: number, item: string) => +acc + +item,
+                            0
+                        );
                     }
+                    localStore.putCountFirst(currentCardId);
                 }
             }
         }
