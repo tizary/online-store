@@ -1,9 +1,13 @@
 class LocalStore {
     keyName: string;
     keyPrice: string;
+    keyCount: string;
+    keyHeaderInfo: string;
     constructor() {
         this.keyName = 'toCart';
         this.keyPrice = 'totalPrice';
+        this.keyCount = 'totalCount';
+        this.keyHeaderInfo = 'headerInfo';
     }
 
     getProducts() {
@@ -52,6 +56,51 @@ class LocalStore {
         localStorage.setItem(this.keyPrice, JSON.stringify(priceInCart));
 
         return { priceInCart };
+    }
+
+    getCount() {
+        const countLocalStorage = localStorage.getItem(this.keyCount);
+        if (countLocalStorage !== null) {
+            return JSON.parse(countLocalStorage);
+        }
+        return {};
+    }
+
+    putCountFirst(id: string) {
+        const countInCart = this.getCount();
+        if (countInCart[id] === undefined) {
+            countInCart[id] = 1;
+        } else {
+            delete countInCart[id];
+        }
+
+        localStorage.setItem(this.keyCount, JSON.stringify(countInCart));
+
+        return { countInCart };
+    }
+
+    putCount(id: string, count: number) {
+        const countInCart = this.getCount();
+        countInCart[id] = count;
+        localStorage.setItem(this.keyCount, JSON.stringify(countInCart));
+        return { countInCart };
+    }
+
+    getHeaderInfo() {
+        const headerInfo = localStorage.getItem(this.keyHeaderInfo);
+        if (headerInfo !== null) {
+            return JSON.parse(headerInfo);
+        }
+        return {};
+    }
+
+    putHeaderInfo(price: number, count: number) {
+        const headerInfo = this.getHeaderInfo();
+        headerInfo.price = price;
+        headerInfo.count = count;
+
+        localStorage.setItem(this.keyHeaderInfo, JSON.stringify(headerInfo));
+        return { headerInfo };
     }
 }
 
