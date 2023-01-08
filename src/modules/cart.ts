@@ -23,7 +23,9 @@ export class InitializeCart extends Products {
         const productsStore = localStore.getProducts();
         let htmlCartProduct = '';
         let totalPrice = 0;
+        let totalCount = 0;
         let index = 1;
+        const curObj = localStore.getCount();
         this.productsArr.forEach((item) => {
             if (productsStore.indexOf(`${item.id}`) !== -1) {
                 htmlCartProduct += `
@@ -39,11 +41,15 @@ export class InitializeCart extends Products {
                             <p>Rating: <span class="item-text">${item.rating}</span></p>
                         </div>
                         <div class="item-price-info">
-                            <p class="item-price">${item.price}</p>
+                            <p class="item-price">${item.price * curObj[item.id]}</p>
                             <div class="item-count">
-                                <button class="btn-minus" data-removeid="${item.id}" data-removeprice="${item.price}">-</button>
-                                <span class="product-amount">1</span>
-                                <button class="btn-plus" data-removeprice="${item.price}">+</button>
+                                <button class="btn-minus" data-removeid="${item.id}" data-removeprice="${
+                    item.price
+                }">-</button>
+                                <span class="product-amount">${curObj[item.id]}</span>
+                                <button class="btn-plus" data-removeid="${item.id}" data-removeprice="${
+                    item.price
+                }">+</button>
                             </div>
                             <p>Stock: <span class="item-text">${item.stock}</span></p>
                         </div>
@@ -51,7 +57,8 @@ export class InitializeCart extends Products {
                     <div class="item-line"></div>
                 `;
                 index++;
-                totalPrice += item.price;
+                totalPrice += item.price * curObj[item.id];
+                totalCount += curObj[item.id];
             }
         });
 
@@ -61,7 +68,7 @@ export class InitializeCart extends Products {
         }
 
         const htmlCartSummary = `
-            <p>Products: <span class="cart-count">${index - 1}</span></p>
+            <p>Products: <span class="cart-count">${totalCount}</span></p>
             <p>Total: <span class="cart-total-price">${totalPrice}</span></p>
             <button class="btn buy-btn">BUY NOW</button>
         `;
@@ -79,10 +86,30 @@ export class InitializeCart extends Products {
                 if (e.target && e.target instanceof HTMLElement) {
                     if (e.target.classList.contains('btn-minus')) {
                         const countInput = e.target.nextElementSibling;
-                        if (countInput && countInput.textContent) {
+                        const closestDiv = e.target.closest('div.item-price-info');
+                        const itemPrice = closestDiv?.querySelector('.item-price');
+                        const productRemovePrice = e.target.dataset.removeprice;
+                        const productRemoveId = e.target.dataset.removeid;
+                        const totalPrice = document.querySelector('.cart-total-price');
+                        const totalCount = document.querySelector('.cart-count');
+
+                        if (countInput && countInput.textContent && productRemovePrice && productRemoveId) {
                             const count = parseInt(countInput.textContent);
                             if (count > 0) {
                                 countInput.textContent = `${count - 1}`;
+                                localStore.putCount(productRemoveId, count - 1);
+                                if (itemPrice && itemPrice.textContent) {
+                                    const curObj = localStore.getCount();
+                                    itemPrice.textContent = `${parseInt(productRemovePrice) * curObj[productRemoveId]}`;
+                                }
+                                if (totalPrice && totalPrice.textContent && totalCount && totalCount.textContent) {
+                                    const curTotalPrice = totalPrice.textContent;
+                                    totalPrice.textContent = `${
+                                        parseInt(curTotalPrice) - parseInt(productRemovePrice)
+                                    }`;
+                                    const curTotalCount = totalCount.textContent;
+                                    totalCount.textContent = `${parseInt(curTotalCount) - 1}`;
+                                }
                             }
                             if (count === 1) {
                                 const productRemoveId = e.target.dataset.removeid;
@@ -90,6 +117,7 @@ export class InitializeCart extends Products {
                                 if (productRemoveId && productRemovePrice) {
                                     localStore.putProducts(productRemoveId);
                                     localStore.putPrice(productRemovePrice);
+                                    localStore.putCountFirst(productRemoveId);
                                     this.renderList();
                                 }
                             }
@@ -98,12 +126,35 @@ export class InitializeCart extends Products {
                         const countInput = e.target.previousElementSibling;
                         const closestDiv = e.target.closest('div.item-price-info');
                         const stockCount = closestDiv?.querySelector('.item-text');
+                        const itemPrice = closestDiv?.querySelector('.item-price');
                         const productRemovePrice = e.target.dataset.removeprice;
-                        console.log(productRemovePrice);
-                        if (countInput && countInput.textContent && stockCount && stockCount.textContent) {
+                        const productRemoveId = e.target.dataset.removeid;
+                        const totalPrice = document.querySelector('.cart-total-price');
+                        const totalCount = document.querySelector('.cart-count');
+                        if (
+                            countInput &&
+                            countInput.textContent &&
+                            stockCount &&
+                            stockCount.textContent &&
+                            productRemoveId &&
+                            productRemovePrice
+                        ) {
                             const count = parseInt(countInput.textContent);
                             if (count < parseInt(stockCount.textContent)) {
                                 countInput.textContent = `${count + 1}`;
+                                localStore.putCount(productRemoveId, count + 1);
+                                if (itemPrice && itemPrice.textContent) {
+                                    const curObj = localStore.getCount();
+                                    itemPrice.textContent = `${parseInt(productRemovePrice) * curObj[productRemoveId]}`;
+                                }
+                                if (totalPrice && totalPrice.textContent && totalCount && totalCount.textContent) {
+                                    const curTotalPrice = totalPrice.textContent;
+                                    totalPrice.textContent = `${
+                                        parseInt(curTotalPrice) + parseInt(productRemovePrice)
+                                    }`;
+                                    const curTotalCount = totalCount.textContent;
+                                    totalCount.textContent = `${parseInt(curTotalCount) + 1}`;
+                                }
                             }
                         }
                     }

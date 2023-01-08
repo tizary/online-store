@@ -316,6 +316,8 @@ export class ProductsCard extends Products {
                             0
                         );
                     }
+                    const { countInCart } = localStore.putCountFirst(currentCardId);
+                    console.log(countInCart);
                 }
             }
         }

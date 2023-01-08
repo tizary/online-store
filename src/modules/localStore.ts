@@ -1,9 +1,11 @@
 class LocalStore {
     keyName: string;
     keyPrice: string;
+    keyCount: string;
     constructor() {
         this.keyName = 'toCart';
         this.keyPrice = 'totalPrice';
+        this.keyCount = 'totalCount';
     }
 
     getProducts() {
@@ -52,6 +54,34 @@ class LocalStore {
         localStorage.setItem(this.keyPrice, JSON.stringify(priceInCart));
 
         return { priceInCart };
+    }
+
+    getCount() {
+        const countLocalStorage = localStorage.getItem(this.keyCount);
+        if (countLocalStorage !== null) {
+            return JSON.parse(countLocalStorage);
+        }
+        return {};
+    }
+
+    putCountFirst(id: string) {
+        const countInCart = this.getCount();
+        if (countInCart[id] === undefined) {
+            countInCart[id] = 1;
+        } else {
+            delete countInCart[id];
+        }
+
+        localStorage.setItem(this.keyCount, JSON.stringify(countInCart));
+
+        return { countInCart };
+    }
+
+    putCount(id: string, count: number) {
+        const countInCart = this.getCount();
+        countInCart[id] = count;
+        localStorage.setItem(this.keyCount, JSON.stringify(countInCart));
+        return { countInCart };
     }
 }
 
