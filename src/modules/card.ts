@@ -5,6 +5,7 @@ import { headerBlock } from './headerBlock';
 export class ProductsCard extends Products {
     productsArr!: productObject[];
     async createCardList() {
+        const renderProducts = await this.render(this.url);
         const hash: string = window.location.hash;
         let productsArr: productObject[] = [];
         if (
@@ -13,7 +14,7 @@ export class ProductsCard extends Products {
             hash.indexOf('price') === -1 &&
             hash.indexOf('stock') === -1
         ) {
-            productsArr = await this.render(this.url);
+            productsArr = renderProducts;
         } else {
             if (hash.indexOf('category') !== 0) {
                 let allArr;
@@ -21,7 +22,7 @@ export class ProductsCard extends Products {
                 if (productsArr.length !== 0) {
                     allArr = productsArr;
                 } else {
-                    allArr = await this.render(this.url);
+                    allArr = renderProducts;
                 }
                 const arr: string[] = this.findParametrs('category');
                 allArr.forEach((item: productObject) => {
@@ -37,7 +38,7 @@ export class ProductsCard extends Products {
                 if (productsArr.length !== 0) {
                     allArr = productsArr;
                 } else {
-                    allArr = await this.render(this.url);
+                    allArr = renderProducts;
                 }
                 const arr: string[] = this.findParametrs('brand');
                 allArr.forEach((item: productObject) => {
@@ -53,7 +54,7 @@ export class ProductsCard extends Products {
                 if (productsArr.length !== 0) {
                     allArr = productsArr;
                 } else {
-                    allArr = await this.render(this.url);
+                    allArr = renderProducts;
                 }
                 const arr: string[] = this.findParametrs('price');
                 allArr.forEach((item: productObject) => {
@@ -69,7 +70,7 @@ export class ProductsCard extends Products {
                 if (productsArr.length !== 0) {
                     allArr = productsArr;
                 } else {
-                    allArr = await this.render(this.url);
+                    allArr = renderProducts;
                 }
                 const arr: string[] = this.findParametrs('stock');
                 allArr.forEach((item: productObject) => {
@@ -82,7 +83,7 @@ export class ProductsCard extends Products {
         }
         if (hash.indexOf('sort') !== -1) {
             if (productsArr.length === 0) {
-                productsArr = await this.render(this.url);
+                productsArr = renderProducts;
             }
             const select = document.getElementById('select') as HTMLSelectElement;
             switch (+select.value) {
@@ -121,7 +122,7 @@ export class ProductsCard extends Products {
             if (productsArr.length !== 0) {
                 allArr = productsArr;
             } else {
-                allArr = await this.render(this.url);
+                allArr = renderProducts;
             }
             const arr: string[] = this.findParametrs('search');
             allArr.forEach((item: productObject) => {
