@@ -471,7 +471,6 @@ export class ProductsFiltering extends Products {
             resetBtn.addEventListener('click', (e) => {
                 // window.location.hash = '';
                 localStorage.removeItem('filteringHashObj');
-                // route(e);
                 const router = new Router();
                 router.initRoute(e);
                 const filterBlock = new ProductsFiltering();

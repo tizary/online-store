@@ -245,16 +245,16 @@ export class ProductsCard extends Products {
         });
     }
     cardEvents(event: MouseEvent) {
-        // const cardButton2 = document.querySelector('.main__block__card-field__card__footer__button') as HTMLElement;
+        const cardButton2 = document.querySelector('.main__block__card-field__card__footer__button') as HTMLElement;
         const target = event.target;
         if (target != null) {
             console.log(target);
         }
-        // if (event.target != cardButton2) {
-        //     console.log('не кнопка');
-        // } else {
-        //     console.log('кнопка');
-        // }
+        if (event.target != cardButton2) {
+            console.log('не кнопка');
+        } else {
+            console.log('кнопка');
+        }
     }
     searchCards(text: string): void {
         const hash: string = window.location.hash;
@@ -286,14 +286,13 @@ export class ProductsCard extends Products {
         return parametr;
     }
     changeClick(e: Event) {
-        const cartCount = document.querySelector('.header__cart-count');
         const headerPriceAmount = document.querySelector('.header__price-amount');
         if (e.target && e.target instanceof HTMLElement) {
             if (e.target.classList.contains('main__block__card-field__card__footer__button')) {
                 const currentCardId = e.target.dataset.btnid;
                 const currentCardPrice = e.target.dataset.btnprice;
                 if (currentCardId && currentCardPrice) {
-                    const { pushProduct, productsInCart } = localStore.putProducts(currentCardId);
+                    const { pushProduct } = localStore.putProducts(currentCardId);
                     if (pushProduct) {
                         e.target.classList.add('cart-active');
                         e.target.innerHTML = 'DROP FROM CART';
@@ -315,9 +314,8 @@ export class ProductsCard extends Products {
                             curInfo.count - curCount
                         );
                     }
-                    if (cartCount) {
-                        cartCount.textContent = productsInCart.length;
-                    }
+                    headerBlock.initHeader();
+
                     const { priceInCart } = localStore.putPrice(currentCardPrice);
                     if (headerPriceAmount) {
                         headerPriceAmount.textContent = priceInCart.reduce(
