@@ -1,5 +1,7 @@
 import { Products, productObject } from './rednerProducts';
 import { localStore } from './localStore';
+import { headerBlock } from './headerBlock';
+
 export class ProductsCard extends Products {
     productsArr!: productObject[];
     async createCardList() {
@@ -131,16 +133,8 @@ export class ProductsCard extends Products {
         }
 
         let cardList = '';
-        const headerPriceAmount = document.querySelector('.header__price-amount');
-        const priceStore = localStore.getPrice();
-        if (headerPriceAmount) {
-            headerPriceAmount.textContent = priceStore.reduce((acc: number, item: string) => +acc + +item, 0);
-        }
+        headerBlock.initHeader();
         const productsStore = localStore.getProducts();
-        const cartCount = document.querySelector('.header__cart-count');
-        if (cartCount) {
-            cartCount.textContent = productsStore.length;
-        }
         productsArr.forEach((item: productObject) => {
             let activeClass = '';
             let activeText = '';
@@ -302,9 +296,23 @@ export class ProductsCard extends Products {
                     if (pushProduct) {
                         e.target.classList.add('cart-active');
                         e.target.innerHTML = 'DROP FROM CART';
+                        const curInfo = localStore.getHeaderInfo();
+                        if (curInfo.price && curInfo.count) {
+                            localStore.putHeaderInfo(curInfo.price + parseInt(currentCardPrice), curInfo.count + 1);
+                        } else {
+                            localStore.putHeaderInfo(parseInt(currentCardPrice), 1);
+                        }
+                        headerBlock.initHeader();
                     } else {
                         e.target.classList.remove('cart-active');
                         e.target.innerHTML = 'ADD TO CART';
+                        const curInfo = localStore.getHeaderInfo();
+                        const curCountStore = localStore.getCount();
+                        const curCount = parseInt(curCountStore[currentCardId]);
+                        localStore.putHeaderInfo(
+                            curInfo.price - parseInt(currentCardPrice) * curCount,
+                            curInfo.count - curCount
+                        );
                     }
                     if (cartCount) {
                         cartCount.textContent = productsInCart.length;
@@ -316,8 +324,7 @@ export class ProductsCard extends Products {
                             0
                         );
                     }
-                    const { countInCart } = localStore.putCountFirst(currentCardId);
-                    console.log(countInCart);
+                    localStore.putCountFirst(currentCardId);
                 }
             }
         }

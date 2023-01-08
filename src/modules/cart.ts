@@ -1,6 +1,7 @@
 import { Router } from './router';
 import { localStore } from './localStore';
 import { productObject, Products } from './rednerProducts';
+import { headerBlock } from './headerBlock';
 
 export class InitializeCart extends Products {
     productsArr!: productObject[];
@@ -109,7 +110,12 @@ export class InitializeCart extends Products {
                                     }`;
                                     const curTotalCount = totalCount.textContent;
                                     totalCount.textContent = `${parseInt(curTotalCount) - 1}`;
+                                    localStore.putHeaderInfo(
+                                        parseInt(curTotalPrice) - parseInt(productRemovePrice),
+                                        parseInt(curTotalCount) - 1
+                                    );
                                 }
+                                headerBlock.initHeader();
                             }
                             if (count === 1) {
                                 const productRemoveId = e.target.dataset.removeid;
@@ -154,7 +160,12 @@ export class InitializeCart extends Products {
                                     }`;
                                     const curTotalCount = totalCount.textContent;
                                     totalCount.textContent = `${parseInt(curTotalCount) + 1}`;
+                                    localStore.putHeaderInfo(
+                                        parseInt(curTotalPrice) + parseInt(productRemovePrice),
+                                        parseInt(curTotalCount) + 1
+                                    );
                                 }
+                                headerBlock.initHeader();
                             }
                         }
                     }
