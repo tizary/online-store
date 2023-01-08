@@ -13,6 +13,7 @@ export class InitializeCart extends Products {
                 const router = new Router();
                 router.initRoute(e);
                 this.renderList();
+                this.changeCountProduct();
             });
         }
     }
@@ -29,7 +30,7 @@ export class InitializeCart extends Products {
                     <div class="cart__block-list">
                         <span class="item-number">${index}</span>
                         <div class="img-container">
-                            <img class="item-img" src=${item.thumbnail}></img>
+                            <img class="item-img" src=${item.thumbnail} loading="lazy"></img>
                         </div>
                         <div class="item-desc">
                             <p class="item-title">${item.title}</p>
@@ -40,9 +41,9 @@ export class InitializeCart extends Products {
                         <div class="item-price-info">
                             <p class="item-price">${item.price}</p>
                             <div class="item-count">
-                                <button class="btn-minus">-</button>
-                                <span>1</span>
-                                <button class="btn-plus">+</button>
+                                <button class="btn-minus" data-removeid="${item.id}" data-removeprice="${item.price}">-</button>
+                                <span class="product-amount">1</span>
+                                <button class="btn-plus" data-removeprice="${item.price}">+</button>
                             </div>
                             <p>Stock: <span class="item-text">${item.stock}</span></p>
                         </div>
@@ -68,6 +69,46 @@ export class InitializeCart extends Products {
         const cartSummary = document.querySelector('.cart__summary-description');
         if (cartSummary) {
             cartSummary.innerHTML = htmlCartSummary;
+        }
+    }
+
+    changeCountProduct() {
+        const cartBlock = document.querySelector('.cart__block-prod');
+        if (cartBlock) {
+            cartBlock.addEventListener('click', (e) => {
+                if (e.target && e.target instanceof HTMLElement) {
+                    if (e.target.classList.contains('btn-minus')) {
+                        const countInput = e.target.nextElementSibling;
+                        if (countInput && countInput.textContent) {
+                            const count = parseInt(countInput.textContent);
+                            if (count > 0) {
+                                countInput.textContent = `${count - 1}`;
+                            }
+                            if (count === 1) {
+                                const productRemoveId = e.target.dataset.removeid;
+                                const productRemovePrice = e.target.dataset.removeprice;
+                                if (productRemoveId && productRemovePrice) {
+                                    localStore.putProducts(productRemoveId);
+                                    localStore.putPrice(productRemovePrice);
+                                    this.renderList();
+                                }
+                            }
+                        }
+                    } else if (e.target.classList.contains('btn-plus')) {
+                        const countInput = e.target.previousElementSibling;
+                        const closestDiv = e.target.closest('div.item-price-info');
+                        const stockCount = closestDiv?.querySelector('.item-text');
+                        const productRemovePrice = e.target.dataset.removeprice;
+                        console.log(productRemovePrice);
+                        if (countInput && countInput.textContent && stockCount && stockCount.textContent) {
+                            const count = parseInt(countInput.textContent);
+                            if (count < parseInt(stockCount.textContent)) {
+                                countInput.textContent = `${count + 1}`;
+                            }
+                        }
+                    }
+                }
+            });
         }
     }
 }

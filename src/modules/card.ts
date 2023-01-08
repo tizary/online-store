@@ -134,7 +134,7 @@ export class ProductsCard extends Products {
         const headerPriceAmount = document.querySelector('.header__price-amount');
         const priceStore = localStore.getPrice();
         if (headerPriceAmount) {
-            headerPriceAmount.textContent = priceStore.reduce((acc: number, item: string) => +acc + +item);
+            headerPriceAmount.textContent = priceStore.reduce((acc: number, item: string) => +acc + +item, 0);
         }
         const productsStore = localStore.getProducts();
         const cartCount = document.querySelector('.header__cart-count');
@@ -311,7 +311,10 @@ export class ProductsCard extends Products {
                     }
                     const { priceInCart } = localStore.putPrice(currentCardPrice);
                     if (headerPriceAmount) {
-                        headerPriceAmount.textContent = priceInCart.reduce((acc: number, item: string) => +acc + +item);
+                        headerPriceAmount.textContent = priceInCart.reduce(
+                            (acc: number, item: string) => +acc + +item,
+                            0
+                        );
                     }
                 }
             }
