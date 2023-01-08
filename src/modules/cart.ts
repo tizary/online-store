@@ -2,6 +2,8 @@ import { Router } from './router';
 import { localStore } from './localStore';
 import { productObject, Products } from './rednerProducts';
 import { headerBlock } from './headerBlock';
+import { ProductsCard } from './card';
+const card = new ProductsCard();
 
 export class InitializeCart extends Products {
     productsArr!: productObject[];
@@ -33,7 +35,8 @@ export class InitializeCart extends Products {
                     <div class="cart__block-list">
                         <span class="item-number">${index}</span>
                         <div class="img-container">
-                            <img class="item-img" src=${item.thumbnail} loading="lazy"></img>
+                                <img class="item-img" src=${item.thumbnail} loading="lazy"></img>
+                                <a class = "item-anchor" data-id="${item.id}" href="/product_details/${item.id}"></a>
                         </div>
                         <div class="item-desc">
                             <p class="item-title">${item.title}</p>
@@ -78,6 +81,11 @@ export class InitializeCart extends Products {
         if (cartSummary) {
             cartSummary.innerHTML = htmlCartSummary;
         }
+        const cardDetails = document.querySelector('.item-anchor');
+        cardDetails?.addEventListener('click', (event) => {
+            console.log(event.target);
+            card.cardEvents(event);
+        });
     }
 
     changeCountProduct() {
