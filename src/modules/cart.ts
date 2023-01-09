@@ -3,7 +3,6 @@ import { localStore } from './localStore';
 import { productObject, Products } from './rednerProducts';
 import { headerBlock } from './headerBlock';
 import { ProductsCard } from './card';
-const card = new ProductsCard();
 
 interface promoObject {
     name: string;
@@ -18,11 +17,13 @@ export class InitializeCart extends Products {
         const cardLogo = document.querySelector('.header__cart-logo');
 
         if (cardLogo) {
-            cardLogo.addEventListener('click', (e) => {
+            cardLogo.addEventListener('click', (event) => {
+                event.preventDefault();
                 const router = new Router();
-                router.initRoute(e);
-                this.renderList();
-                this.changeCountProduct();
+                if (event.target instanceof HTMLAnchorElement) {
+                    router.initRoute(event.target.pathname);
+                }
+                this.renderCart();
             });
         }
     }
@@ -127,6 +128,7 @@ export class InitializeCart extends Products {
         }
         const cardDetails = document.querySelector('.cart__block');
         cardDetails?.addEventListener('click', (event) => {
+            const card = new ProductsCard();
             card.cardEvents(event);
         });
 
@@ -299,7 +301,8 @@ export class InitializeCart extends Products {
             }
         });
     }
+    renderCart() {
+        this.renderList();
+        this.changeCountProduct();
+    }
 }
-
-const initializeCard = new InitializeCart();
-initializeCard.openCart();

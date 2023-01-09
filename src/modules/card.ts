@@ -1,7 +1,7 @@
 import { Products, productObject } from './rednerProducts';
 import { Router } from './router';
 const router = new Router();
-import { DetailsPage } from './productDetails';
+// import { DetailsPage } from './productDetails';
 import { localStore } from './localStore';
 import { headerBlock } from './headerBlock';
 
@@ -206,15 +206,11 @@ export class ProductsCard extends Products {
             this.cardEvents(event);
         });
         this.createCardList();
-        window.addEventListener('popstate', () => {
-            this.createCardList();
-        });
         this.addToCart();
     }
     viewModeBig() {
         const cards = document.querySelectorAll<HTMLElement>('.main__block__card-field__card');
         const cardsInfo = document.querySelectorAll<HTMLElement>('.main__block__card-field__card__footer__info');
-        // const cardsImg = document.querySelectorAll<HTMLElement>('.main__block__card-field__card__header');
         const hash: string = window.location.hash;
         if (hash.indexOf('viewMode') === -1) {
             window.location.hash += `&viewMode=big`;
@@ -225,9 +221,6 @@ export class ProductsCard extends Products {
             item.style.width = '300px';
             item.style.height = '420px';
         });
-        // cardsImg.forEach((item): void => {
-        //     item.style.height = '200px';
-        // });
         cardsInfo.forEach((item): void => {
             item.classList.remove('hide');
         });
@@ -235,7 +228,6 @@ export class ProductsCard extends Products {
     viewModeSmall() {
         const cards = document.querySelectorAll<HTMLElement>('.main__block__card-field__card');
         const cardsInfo = document.querySelectorAll<HTMLElement>('.main__block__card-field__card__footer__info');
-        // const cardsImg = document.querySelectorAll<HTMLElement>('.main__block__card-field__card__header');
         const hash: string = window.location.hash;
         if (hash.indexOf('viewMode') === -1) {
             console.log('hi');
@@ -247,19 +239,15 @@ export class ProductsCard extends Products {
             item.style.width = '200px';
             item.style.height = '200px';
         });
-        // cardsImg.forEach((item): void => {
-        //     item.style.height = '150px';
-        // });
         cardsInfo.forEach((item): void => {
             item.classList.add('hide');
         });
     }
     cardEvents(event: Event) {
         const target = event.target;
+        event.preventDefault();
         if (target instanceof HTMLAnchorElement && target.dataset.id !== undefined) {
-            router.initRoute(event);
-            const detailsPage = new DetailsPage();
-            detailsPage.renderDetailsPage();
+            router.initRoute(target.pathname);
         }
     }
     searchCards(text: string): void {
@@ -348,5 +336,3 @@ export class ProductsCard extends Products {
         }
     }
 }
-const mainBlockInit = new ProductsCard();
-mainBlockInit.mainBlockActionsInit();
