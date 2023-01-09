@@ -27,6 +27,7 @@ export class HeaderBlock {
             const router = new Router();
             headerLogo.addEventListener('click', (event) => {
                 event.preventDefault();
+                localStorage.removeItem('filteringHashObj');
                 if (event.target instanceof HTMLAnchorElement) {
                     router.initRoute(event.target.pathname);
                 }

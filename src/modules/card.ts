@@ -280,7 +280,7 @@ export class ProductsCard extends Products {
         return parametr;
     }
     changeClick(e: Event) {
-        const headerPriceAmount = document.querySelector('.header__price-amount');
+        // const headerPriceAmount = document.querySelector('.header__price-amount');
         if (e.target && e.target instanceof HTMLElement) {
             if (
                 e.target.classList.contains('main__block__card-field__card__footer__button') ||
@@ -313,17 +313,6 @@ export class ProductsCard extends Products {
                     }
                     headerBlock.initHeader();
 
-                    const { priceInCart } = localStore.putPrice(currentCardPrice);
-                    if (headerPriceAmount) {
-                        headerPriceAmount.textContent = priceInCart.reduce(
-                            (acc: number, item: string) => +acc + +item,
-                            0
-                        );
-                        headerPriceAmount.textContent = priceInCart.reduce(
-                            (acc: number, item: string) => +acc + +item,
-                            0
-                        );
-                    }
                     localStore.putCountFirst(currentCardId);
                 }
             }
@@ -332,7 +321,7 @@ export class ProductsCard extends Products {
     addToCart() {
         const cardField = document.querySelector('.main__block__card-field');
         if (cardField) {
-            cardField.addEventListener('click', this.changeClick, false);
+            cardField.addEventListener('click', this.changeClick);
         }
     }
 }
