@@ -245,8 +245,8 @@ export class ProductsCard extends Products {
     }
     cardEvents(event: Event) {
         const target = event.target;
-        event.preventDefault();
         if (target instanceof HTMLAnchorElement && target.dataset.id !== undefined) {
+            event.preventDefault();
             router.initRoute(target.pathname);
         }
     }
