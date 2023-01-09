@@ -137,7 +137,7 @@ export class InitializeCart extends Products {
             this.changePromo(e, promocod);
         });
 
-        const promoAddBtn = document.querySelector('.cart-promo');
+        const promoAddBtn = document.querySelector('.promo-offer-add');
         promoAddBtn?.addEventListener('click', (e) => {
             this.addingPromo(e, promocod);
         });
@@ -285,17 +285,24 @@ export class InitializeCart extends Products {
             promoText.textContent = `${promocod[promo].name}: -${promocod[promo].percent}%`;
             const dropBtn = document.createElement('button');
             dropBtn.classList.add('btn', 'promo-btn', 'promo-offer-drop');
+            dropBtn.setAttribute('data-promo', `${promo}`);
             dropBtn.textContent = 'DROP';
             div.append(promoText, dropBtn);
             activePromocod?.append(div);
         }
+        this.droppingPromo();
     }
 
     droppingPromo() {
-        const promoAddBtn = document.querySelector('.promo-offer-add');
-        promoAddBtn?.addEventListener('click', (e) => {
+        const activePromocod = document.querySelector('.active-promocod');
+        activePromocod?.addEventListener('click', (e) => {
             if (e.target instanceof HTMLElement) {
                 if (e.target.classList.contains('promo-offer-drop')) {
+                    const promocod = e.target.dataset.promo;
+                    if (promocod) {
+                        console.log(promocod);
+                        localStore.putPromo(promocod);
+                    }
                     e.target.closest('div')?.remove();
                 }
             }

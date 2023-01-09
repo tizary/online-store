@@ -116,12 +116,13 @@ class LocalStore {
     putPromo(promocod: string) {
         const promo = this.getPromo();
         const index = promo.indexOf(promocod);
+        console.log(index);
         if (index === -1) {
             promo.push(promocod);
-            localStorage.setItem(this.keyPromo, JSON.stringify(promo));
         } else {
             promo.splice(index, 1);
         }
+        localStorage.setItem(this.keyPromo, JSON.stringify(promo));
     }
 }
 
