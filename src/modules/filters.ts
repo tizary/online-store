@@ -468,11 +468,13 @@ export class ProductsFiltering extends Products {
     reset() {
         const resetBtn = document.querySelector('.reset-btn');
         if (resetBtn) {
-            resetBtn.addEventListener('click', (e) => {
-                // window.location.hash = '';
+            resetBtn.addEventListener('click', (event) => {
                 localStorage.removeItem('filteringHashObj');
+                event.preventDefault();
                 const router = new Router();
-                router.initRoute(e);
+                if (event.target instanceof HTMLAnchorElement) {
+                    router.initRoute(event.target.pathname);
+                }
                 const filterBlock = new ProductsFiltering();
                 filterBlock.initializeFiltering();
                 const mainBlockInit = new ProductsCard();
@@ -493,6 +495,3 @@ export class ProductsFiltering extends Products {
         });
     }
 }
-
-const filterBlock = new ProductsFiltering();
-filterBlock.initializeFiltering();

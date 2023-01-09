@@ -1,4 +1,5 @@
 import { localStore } from './localStore';
+import { Router } from './router';
 
 export class HeaderBlock {
     initHeader() {
@@ -18,6 +19,18 @@ export class HeaderBlock {
             } else {
                 headerCount.textContent = headerInfo.count;
             }
+        }
+    }
+    initLogo() {
+        const headerLogo = document.querySelector('.header__logo');
+        if (headerLogo) {
+            const router = new Router();
+            headerLogo.addEventListener('click', (event) => {
+                event.preventDefault();
+                if (event.target instanceof HTMLAnchorElement) {
+                    router.initRoute(event.target.pathname);
+                }
+            });
         }
     }
 }
