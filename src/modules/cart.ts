@@ -23,7 +23,7 @@ export class InitializeCart extends Products {
                 if (event.target instanceof HTMLAnchorElement) {
                     router.initRoute(event.target.pathname);
                 }
-                this.renderCart();
+                this.renderList();
             });
         }
     }
