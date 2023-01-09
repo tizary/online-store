@@ -3,11 +3,13 @@ class LocalStore {
     keyPrice: string;
     keyCount: string;
     keyHeaderInfo: string;
+    keyPromo: string;
     constructor() {
         this.keyName = 'toCart';
         this.keyPrice = 'totalPrice';
         this.keyCount = 'totalCount';
         this.keyHeaderInfo = 'headerInfo';
+        this.keyPromo = 'promocod';
     }
 
     getProducts() {
@@ -101,6 +103,25 @@ class LocalStore {
 
         localStorage.setItem(this.keyHeaderInfo, JSON.stringify(headerInfo));
         return { headerInfo };
+    }
+
+    getPromo() {
+        const promo = localStorage.getItem(this.keyPromo);
+        if (promo !== null) {
+            return JSON.parse(promo);
+        }
+        return [];
+    }
+
+    putPromo(promocod: string) {
+        const promo = this.getPromo();
+        const index = promo.indexOf(promocod);
+        if (index === -1) {
+            promo.push(promocod);
+            localStorage.setItem(this.keyPromo, JSON.stringify(promo));
+        } else {
+            promo.splice(index, 1);
+        }
     }
 }
 

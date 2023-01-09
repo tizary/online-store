@@ -5,6 +5,12 @@ import { headerBlock } from './headerBlock';
 import { ProductsCard } from './card';
 const card = new ProductsCard();
 
+interface promoObject {
+    name: string;
+    percent: number;
+    status: boolean;
+}
+
 export class InitializeCart extends Products {
     productsArr!: productObject[];
 
@@ -71,9 +77,47 @@ export class InitializeCart extends Products {
             cartBlock.innerHTML = htmlCartProduct;
         }
 
+        const promocod: Record<string, promoObject> = {
+            rs: {
+                name: 'Rolling Scopes School',
+                percent: 10,
+                status: true,
+            },
+            epm: {
+                name: 'EPAM Systems',
+                percent: 10,
+                status: true,
+            },
+        };
+
+        const promocodArr = Object.keys(promocod);
+        const promocodList = promocodArr.join(', ');
+
+        const promoList = localStore.getPromo();
+        let promoPercent = 0;
+        if (promoList.length) {
+            promoList.forEach((item: string) => {
+                const promoObj: number = promocod[item].percent;
+                promoPercent = promoPercent + promoObj;
+                console.log(promoPercent);
+            });
+        }
+
         const htmlCartSummary = `
             <p>Products: <span class="cart-count">${totalCount}</span></p>
             <p>Total: <span class="cart-total-price">${totalPrice}</span></p>
+            <div class="promocod-container hidden">
+                <p class="cart-promo-price">Total: <span class="cart-total-price">${
+                    (totalPrice * (100 - promoPercent)) / 100
+                }</span></p>
+            </div>
+
+            <input class="cart-promo" type="search" placeholder="Enter promo code">
+            <div class="promo-offer hidden">
+                <span class="promo-offer-active"></span>
+                <button class="btn promo-btn promo-offer-add">ADD</button>
+            </div>
+            <p class="promocod">Promo for test: ${promocodList.toUpperCase()}</p>
             <button class="btn buy-btn">BUY NOW</button>
         `;
 
@@ -81,10 +125,19 @@ export class InitializeCart extends Products {
         if (cartSummary) {
             cartSummary.innerHTML = htmlCartSummary;
         }
-        const cardDetails = document.querySelector('.item-anchor');
+        const cardDetails = document.querySelector('.cart__block');
         cardDetails?.addEventListener('click', (event) => {
-            console.log(event.target);
             card.cardEvents(event);
+        });
+
+        const cartPromo = document.querySelector('.cart-promo');
+        cartPromo?.addEventListener('input', (e) => {
+            this.changePromo(e, promocod);
+        });
+
+        const promoAddBtn = document.querySelector('.cart-promo');
+        promoAddBtn?.addEventListener('click', (e) => {
+            this.addingPromo(e, promocod);
         });
     }
 
@@ -180,6 +233,71 @@ export class InitializeCart extends Products {
                 }
             });
         }
+    }
+
+    changePromo(e: Event, promocod: Record<string, promoObject>) {
+        const promocodArr = Object.keys(promocod);
+
+        const promoOffer = document.querySelector('.promo-offer');
+        const promoAddBtn = document.querySelector('.promo-offer-add');
+        const promoOfferActive = document.querySelector('.promo-offer-active') as HTMLElement;
+
+        if (e.target instanceof HTMLInputElement) {
+            const promo = e.target.value;
+            if (
+                promo &&
+                (promocodArr.indexOf(promo) !== -1 || promocodArr.join(',').toUpperCase().indexOf(promo) !== -1)
+            ) {
+                promoOffer?.classList.remove('hidden');
+                const promocodItem = promocod[promo.toLocaleLowerCase()];
+                if (promocodItem.status) {
+                    promoAddBtn?.classList.remove('hidden');
+                }
+                promoOfferActive.textContent = `${promocodItem.name} - ${promocodItem.percent}%`;
+            } else {
+                promoOffer?.classList.add('hidden');
+            }
+        }
+    }
+
+    addingPromo(e: Event, promocod: Record<string, promoObject>) {
+        const cartPromo = document.querySelector('.cart-promo') as HTMLInputElement;
+        const promoPrice = document.querySelector('.cart-promo-price');
+        const totalPrice = document.querySelector('.cart-total-price');
+        const activePromocod = document.querySelector('.promocod-container');
+        const promo = cartPromo.value.toLowerCase();
+        console.log(promo);
+        if (promocod[promo] !== undefined) {
+            promocod[promo].status = false;
+            localStore.putPromo(promo);
+        }
+        if (e.target instanceof HTMLElement) {
+            promoPrice?.classList.remove('hidden');
+            totalPrice?.classList.add('cross-price');
+            e.target.classList.add('hidden');
+            activePromocod?.classList.remove('hidden');
+            const div = document.createElement('div');
+            div.classList.add('active-promocod');
+            const promoText = document.createElement('p');
+            promoText.classList.add('promo-text');
+            promoText.textContent = `${promocod[promo].name}: -${promocod[promo].percent}%`;
+            const dropBtn = document.createElement('button');
+            dropBtn.classList.add('btn', 'promo-btn', 'promo-offer-drop');
+            dropBtn.textContent = 'DROP';
+            div.append(promoText, dropBtn);
+            activePromocod?.append(div);
+        }
+    }
+
+    droppingPromo() {
+        const promoAddBtn = document.querySelector('.promo-offer-add');
+        promoAddBtn?.addEventListener('click', (e) => {
+            if (e.target instanceof HTMLElement) {
+                if (e.target.classList.contains('promo-offer-drop')) {
+                    e.target.closest('div')?.remove();
+                }
+            }
+        });
     }
 }
 
