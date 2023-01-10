@@ -2,7 +2,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const EslingPlugin = require('eslint-webpack-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
+// const CopyPlugin = require('copy-webpack-plugin');
 
 const mode = process.env.NODE_ENV || 'development';
 const devMode = mode === 'development';
@@ -33,9 +33,9 @@ module.exports = {
             filename: 'index.css',
         }),
         new EslingPlugin({ extensions: 'ts' }),
-        new CopyPlugin({
-            patterns: [{ from: 'src', to: 'dist' }],
-        }),
+        // new CopyPlugin({
+        //     patterns: [{ from: 'src', to: 'dist' }],
+        // }),
     ],
     resolve: {
         extensions: ['.ts', '.js'],
