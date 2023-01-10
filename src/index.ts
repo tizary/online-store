@@ -14,9 +14,8 @@ cartInit.openCart();
 headerInit.initHeader();
 headerInit.initLogo();
 const router = new Router();
-router.initRoute(window.location.pathname);
-window.addEventListener('popstate', (e) => {
-    console.log('aasd');
-    console.log(e);
+router.initRoute(window.location.href);
+window.addEventListener('popstate', () => {
     // router.initRoute(window.location.href);
+    console.log(window.location.pathname);
 });

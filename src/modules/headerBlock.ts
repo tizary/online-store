@@ -29,6 +29,8 @@ export class HeaderBlock {
                 event.preventDefault();
                 localStorage.removeItem('filteringHashObj');
                 if (event.target instanceof HTMLAnchorElement) {
+                    const url = event.target.pathname;
+                    window.history.pushState({ url }, 'url init logo', url);
                     router.initRoute(event.target.pathname);
                 }
             });

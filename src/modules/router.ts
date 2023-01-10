@@ -24,7 +24,7 @@ export class Router {
             },
         ];
         const main = document.querySelector('.main');
-        window.history.pushState({ url }, 'url', url);
+        console.log(url);
         const route: Record<string, string> | undefined = routes.find((route) => {
             const regexp = new RegExp(route.path);
             return window.location.pathname.match(regexp);

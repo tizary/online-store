@@ -33,6 +33,8 @@ export class InitializeCart extends Products {
                 event.preventDefault();
                 const router = new Router();
                 if (event.target instanceof HTMLAnchorElement) {
+                    const url = event.target.pathname;
+                    window.history.pushState({ url }, 'url open card', url);
                     router.initRoute(event.target.pathname);
                 }
                 this.renderList();
