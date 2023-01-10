@@ -1,5 +1,5 @@
 import { Products, productObject } from './rednerProducts';
-// import route from './router';
+import { Router } from './router';
 import { localStore } from './localStore';
 import { ProductsCard } from './card';
 
@@ -22,7 +22,7 @@ export class DetailsPage extends Products {
         if (mainBlock && item) {
             mainBlock.innerHTML = `
             <div class="details__container__link">
-                <a href="/">Store</a>
+                <a class="store-link" href="/">Store</a>
                 <p>»</p>
                 <a>${item.category}</a>
                 <p>»</p>
@@ -62,6 +62,19 @@ export class DetailsPage extends Products {
             </div>
             `;
             const productCard = new ProductsCard();
+            const storeButton = document.querySelector('.store-link');
+            if (storeButton) {
+                storeButton.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    const router = new Router();
+                    if (event.target instanceof HTMLAnchorElement) {
+                        console.log('dfdf');
+                        const url = event.target.pathname;
+                        window.history.pushState({ url }, 'url open card', url);
+                        router.initRoute(event.target.pathname);
+                    }
+                });
+            }
             const addButton = document.querySelector('.details__container__info__button__add');
             addButton?.addEventListener('click', productCard.changeClick, false);
             const smallView = document.querySelector('.details__container__img__small');

@@ -394,10 +394,10 @@
               background: url('./img/four_squares.png');
               background-size: contain;
               background-repeat: no-repeat;
+              transform: scale(1.2);
               transition: all 0.8s ease;
               &:hover {
                 cursor: pointer;
-                transform: scale(1.1);
               }
             }
             &__small {
@@ -406,10 +406,11 @@
               background: url('./img/six_squares.png');
               background-size: contain;
               background-repeat: no-repeat;
+              border-radius: 3px;
+              opacity: 0.7;
               transition: all 0.8s ease;
               &:hover {
                 cursor: pointer;
-                transform: scale(1.1);
               }
             }
           }

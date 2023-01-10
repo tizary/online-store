@@ -131,6 +131,14 @@ export class ProductsCard extends Products {
             allArr.forEach((item: productObject) => {
                 if (item.title.toLocaleLowerCase().includes(arr[0].toLocaleLowerCase())) {
                     searchArr.push(item);
+                } else if (item.category.toLocaleLowerCase().includes(arr[0].toLocaleLowerCase())) {
+                    searchArr.push(item);
+                } else if (item.brand.toLocaleLowerCase().includes(arr[0].toLocaleLowerCase())) {
+                    searchArr.push(item);
+                } else if ((item.price + '').includes(arr[0])) {
+                    searchArr.push(item);
+                } else if ((item.rating + '').includes(arr[0])) {
+                    searchArr.push(item);
                 }
             });
             productsArr = searchArr;
@@ -172,9 +180,11 @@ export class ProductsCard extends Products {
         });
         const foundItem = document.querySelector('.main__block__header-found') as HTMLElement;
         foundItem.textContent = `Found: ${productsArr.length}`;
-
         const mainBlock = document.querySelector('.main__block__card-field');
-        if (mainBlock) {
+        if (productsArr.length === 0 && mainBlock) {
+            console.log(productsArr.length);
+            mainBlock.innerHTML = 'Products not found';
+        } else if (mainBlock) {
             mainBlock.innerHTML = cardList;
         }
         if (hash.indexOf('viewMode=small') !== -1) {
@@ -211,6 +221,16 @@ export class ProductsCard extends Products {
     viewModeBig() {
         const cards = document.querySelectorAll<HTMLElement>('.main__block__card-field__card');
         const cardsInfo = document.querySelectorAll<HTMLElement>('.main__block__card-field__card__footer__info');
+        const viewMode = document.querySelector<HTMLElement>('.main__block__header__view-mode__small');
+        const viewModeBig = document.querySelector<HTMLElement>('.main__block__header__view-mode__big');
+        if (viewMode) {
+            viewMode.style.transform = 'scale(0.8)';
+            viewMode.style.opacity = '0.7';
+        }
+        if (viewModeBig) {
+            viewModeBig.style.transform = 'scale(1.2)';
+            viewModeBig.style.opacity = '1.2';
+        }
         const hash: string = window.location.hash;
         if (hash.indexOf('viewMode') === -1) {
             window.location.hash += `&viewMode=big`;
@@ -228,6 +248,16 @@ export class ProductsCard extends Products {
     viewModeSmall() {
         const cards = document.querySelectorAll<HTMLElement>('.main__block__card-field__card');
         const cardsInfo = document.querySelectorAll<HTMLElement>('.main__block__card-field__card__footer__info');
+        const viewMode = document.querySelector<HTMLElement>('.main__block__header__view-mode__small');
+        const viewModeBig = document.querySelector<HTMLElement>('.main__block__header__view-mode__big');
+        if (viewMode) {
+            viewMode.style.transform = 'scale(1.2)';
+            viewMode.style.opacity = '1';
+        }
+        if (viewModeBig) {
+            viewModeBig.style.transform = 'scale(0.8)';
+            viewModeBig.style.opacity = '0.7';
+        }
         const hash: string = window.location.hash;
         if (hash.indexOf('viewMode') === -1) {
             console.log('hi');
@@ -247,6 +277,8 @@ export class ProductsCard extends Products {
         const target = event.target;
         if (target instanceof HTMLAnchorElement && target.dataset.id !== undefined) {
             event.preventDefault();
+            const url = target.pathname;
+            window.history.pushState({ url }, 'url card', url);
             router.initRoute(target.pathname);
         }
     }
