@@ -1,0 +1,242 @@
+.cart {
+
+  &__block {
+    width: 75%;
+    margin-right: 30px;
+
+    &-title {
+      font-size: 28px;
+      font-weight: 600;
+      padding-bottom: 30px;
+    }
+
+    &-list {
+      display: flex;
+      gap: 10px;
+
+      .item-number {
+        display: flex;
+        align-self: center;
+        justify-content: center;
+        align-items: center;
+        width: 35px;
+        height: 35px;
+        font-size: 21px;
+        border: 1px solid $main-color;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+
+      .img-container {
+        width: 200px;
+        height: 150px;
+        flex-shrink: 0;
+      }
+
+      .item-img {
+        border-radius: 5px;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .item-anchor {
+        position: relative;
+        display: block;
+        width: 200px;
+        height: 150px;
+        bottom: 150px;
+      }
+
+      .item-desc {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        gap: 5px;
+      }
+
+      .item-title {
+        font-size: 20px;
+        font-weight: 600;
+        padding-bottom: 10px;
+        color: $main-color;
+      }
+
+      .item-text {
+        font-size: 17px;
+        color: $logo-color;
+      }
+
+      .item-price-info {
+        padding: 10px 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        margin-left: auto;
+      }
+
+      .item-price {
+        font-size: 21px;
+        font-weight: 600;
+        color: $logo-color;
+        position: relative;
+        padding-left: 30px;
+
+        &::before {
+          content: '';
+          position: absolute;
+          width: 24px;
+          height: 24px;
+          top: 0;
+          left: 0;
+          background: url('./img/euro.png');
+          background-repeat: no-repeat;
+          background-size: contain;
+        }
+      }
+
+      .item-count {
+        font-size: 20px;
+        display: flex;
+        justify-content: space-between;
+        padding: 5px;
+        width: 100px;
+        border: 1px solid $light-grey-color;
+        border-radius: 10px;
+      }
+
+      .btn-minus,
+      .btn-plus {
+        line-height: 21px;
+        font-size: 30px;
+        font-weight: 600;
+        color: $main-color;
+        cursor: pointer;
+        width: 20px;
+        height: 20px;
+      }
+
+    }
+
+    .item-line {
+      margin: 10px 0;
+      width: 100%;
+      height: 2px;
+      background: $light-grey-color;
+    }
+
+  }
+
+  &__summary {
+    width: 25%;
+    border: 1px solid $light-grey-color;
+    border-radius: 10px;
+    padding: 20px;
+
+    &-title {
+      text-align: center;
+      font-size: 28px;
+      font-weight: 600;
+      padding-bottom: 30px;
+    }
+
+    &-description {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      font-size: 21px;
+
+      .cart-count,
+      .cart-total-price {
+        font-size: 32px;
+        font-weight: 600;
+        color: $dark-blue;
+      }
+
+      .cart-total-price {
+        position: relative;
+        padding-left: 40px;
+
+        &::before {
+          content: '';
+          position: absolute;
+          width: 32px;
+          height: 32px;
+          top: 0;
+          left: 0;
+          background: url('./img/euro.png');
+          background-repeat: no-repeat;
+          background-size: contain;
+        }
+      }
+
+      .cross-price {
+        text-decoration: line-through;
+      }
+
+      .promocod-container {
+        text-align: center;
+        border: 1px solid $promo-color;
+        border-radius: 5px;
+        padding: 10px;
+
+        .active-promocod {
+          margin-top: 15px;
+          display: flex;
+          gap: 10px;
+          justify-content: center;
+        }
+
+        .promo-text {
+          margin-top: 5px;
+          font-size: 18px;
+          color: $promo-color;
+        }
+      }
+
+      .cart-promo {
+        width: 100%;
+        outline: none;
+        border: 1px solid $main-color;
+        border-radius: 5px;
+        padding: 5px;
+        font-size: 16px;
+      }
+
+      .promocod {
+        font-size: 14px;
+      }
+
+      .btn {
+        margin-top: 15px;
+        @include btn;
+      }
+
+      .promo-offer {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        &-active {
+          font-size: 14px;
+          color: $promo-color;
+        }
+
+      }
+
+      .promo-btn {
+          width: 60px;
+          height: 25px;
+          margin-top: 5px;
+      }
+
+    }
+
+    .hidden {
+      display: none;
+    }
+  }
+
+}
+
