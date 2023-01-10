@@ -280,7 +280,6 @@ export class ProductsCard extends Products {
         return parametr;
     }
     changeClick(e: Event) {
-        // const headerPriceAmount = document.querySelector('.header__price-amount');
         if (e.target && e.target instanceof HTMLElement) {
             if (
                 e.target.classList.contains('main__block__card-field__card__footer__button') ||
